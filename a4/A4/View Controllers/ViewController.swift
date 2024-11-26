@@ -9,6 +9,8 @@ import UIKit
 import SDWebImage
 import SnapKit
 
+//MARK: - To Do register and set up recipe View cells and Social Event View cell (need to make config and probably struct for social event)
+
 class HomescreenViewController: UIViewController {
     
     // MARK: - Properties (view)
