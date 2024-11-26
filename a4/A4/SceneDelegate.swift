@@ -4,6 +4,7 @@
 //
 //  Created by Vin Bui on 10/31/23.
 //
+//MARK: I CHANGED let rootVC = ViewController(), to HomeScreenViewController()
 
 import UIKit
 
@@ -19,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
 
         // 3. Create a view hierarchy programmatically
-        let rootVC = ViewController()
+        let rootVC = HomescreenViewController()
         let navController = UINavigationController(rootViewController: rootVC)
 
         // 4. Set the navigation controller as the window's root view controller
