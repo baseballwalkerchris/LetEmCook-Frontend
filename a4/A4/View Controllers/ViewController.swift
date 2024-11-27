@@ -20,13 +20,34 @@ class HomescreenViewController: UIViewController {
     
     // MARK: - Properties (data)
     private var recipePosts: [RecipePost] = [
-        
+        RecipePost(
+            username: "Ava K",
+            caption: "Bubble Tea",
+            message: "How to make creamy and not too sweet bubble tea using black tea, milk, and store-bought boba. Easy to make and can serve with extra sugar if needed.",
+            imageURL: "bubble_tea",
+            time: Date()
+        ),
+        RecipePost(
+            username: "John D",
+            caption: "Spaghetti Carbonara",
+            message: "Learn to make authentic spaghetti carbonara with simple ingredients: pasta, eggs, pancetta, Parmesan, and black pepper.",
+            imageURL: "spaghetti_carbonara",
+            time: Date()
+        ),
+        RecipePost(
+            username: "Emily W",
+            caption: "Avocado Toast",
+            message: "An easy recipe for avocado toast with a variety of topping ideas for breakfast or a healthy snack.",
+            imageURL: "avocado_toast",
+            time: Date()
+        )
     ]
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        title = "Home"
         
         setupCollectionView() 
     }
@@ -46,11 +67,19 @@ class HomescreenViewController: UIViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ReceipeViewCell.self, forCellWithReuseIdentifier: ReceipeViewCell.reuse)
         
-        //collectionView.delegate = self
-        //collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.backgroundColor = UIColor.a4.offWhite
         
         view.addSubview(collectionView)
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 
 }
@@ -68,6 +97,10 @@ extension HomescreenViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReceipeViewCell.reuse, for: indexPath) as? ReceipeViewCell else { return UICollectionViewCell() }
         
         cell.configure(recipePost: recipePosts[indexPath.row])
+        cell.onImageTapped = { [weak self] in
+            let recipeVC = RecipeViewController()
+            self?.navigationController?.pushViewController(recipeVC, animated: true)
+        }
         return cell
     }
 }

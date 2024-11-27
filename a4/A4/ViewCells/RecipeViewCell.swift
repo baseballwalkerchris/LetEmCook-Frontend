@@ -17,6 +17,7 @@ class ReceipeViewCell: UICollectionViewCell {
     private let foodImage = UIImageView()
     private let bookmarkButton = UIButton()
     private let timePassedSincePosted = UILabel()
+    var onImageTapped: (() -> Void)?
     
     static let reuse = "RecipeViewCellReuse"
     
@@ -39,8 +40,9 @@ class ReceipeViewCell: UICollectionViewCell {
     //MARK: - Configure cell function
     func configure(recipePost: RecipePost){
         //setupimage
-        let recipeImageUrl = URL(string: recipePost.imageURL)
-        foodImage.sd_setImage(with: recipeImageUrl)
+//        let recipeImageUrl = URL(string: recipePost.imageURL)
+//        foodImage.sd_setImage(with: recipeImageUrl)
+        foodImage.image = UIImage(named: recipePost.imageURL)
         username.text = recipePost.username
         caption.text = recipePost.caption
         timePassedSincePosted.text = recipePost.time.convertToAgo()
@@ -50,6 +52,11 @@ class ReceipeViewCell: UICollectionViewCell {
     
     //MARK: Set up functions
     private func setUpFoodImage(){
+        foodImage.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        foodImage.addGestureRecognizer(tapGesture)
+        foodImage.clipsToBounds = true
+        foodImage.layer.cornerRadius = 10
         contentView.addSubview(foodImage)
         
         foodImage.snp.makeConstraints { make in
@@ -103,6 +110,9 @@ class ReceipeViewCell: UICollectionViewCell {
         }
     }
     
+    @objc private func imageTapped() {
+        onImageTapped?()
+    }
     
 }
 
