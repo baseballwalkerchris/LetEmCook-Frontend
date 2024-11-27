@@ -12,7 +12,7 @@ struct RecipePost: Codable {
     // TODO: Create a Post Struct here
     let username: String
     let caption: String
-    let message: String
+    //let message: String
     let imageURL: String
     let time: Date
 }

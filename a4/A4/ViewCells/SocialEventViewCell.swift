@@ -33,10 +33,17 @@ class SocialEventViewCell: UICollectionViewCell {
     private let descriptionTitle = UILabel()
     private let descriptionMessage = UILabel()
     
+    static let reuse = "SocialEventViewCellReuse"
+    
     //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = UIColor.a4.offWhite
+        contentView.backgroundColor = UIColor.white
+        contentView.layer.cornerRadius = 12
+        contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 0.5
+        contentView.layer.borderColor = UIColor.lightGray.cgColor
         
         setUpFoodImage()
         setUpBookmarkButton()
@@ -58,14 +65,25 @@ class SocialEventViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure, TO DO
-    func configure(){
+    func socialConfigure(socialEvent: SocialEventPost){
         //setupimage
+        let recipeImageUrl = URL(string: socialEvent.imageURL)
+        foodImage.sd_setImage(with: recipeImageUrl)
+        eventName.text = socialEvent.eventName
+        author.text = socialEvent.author
+        attendeesLabel.text = "\(socialEvent.maxCount) total"
+        locationLabel.text = socialEvent.location
+        timeLabel.text = socialEvent.date
+        descriptionMessage.text = socialEvent.descriptionOfEvent
       
     }
     
     //MARK: Set up functions
     private func setUpFoodImage(){
+        foodImage.clipsToBounds = true
+        foodImage.contentMode = .scaleAspectFill
         contentView.addSubview(foodImage)
+        
         
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()

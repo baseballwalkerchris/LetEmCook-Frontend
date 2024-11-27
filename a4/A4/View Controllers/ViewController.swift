@@ -8,8 +8,10 @@
 import UIKit
 import SDWebImage
 import SnapKit
+import Foundation
 
 //MARK: - To Do register and set up recipe View cells and Social Event View cell (need to make config and probably struct for social event)
+
 
 class HomescreenViewController: UIViewController {
     
@@ -19,28 +21,37 @@ class HomescreenViewController: UIViewController {
    
     
     // MARK: - Properties (data)
+//    private var recipePosts: [RecipePost] = [
+//        RecipePost(
+//            username: "Ava K",
+//            caption: "Bubble Tea",
+//            //message: "How to make creamy and not too sweet bubble tea using black tea, milk, and store-bought boba. Easy to make and can serve with extra sugar if needed.",
+//            imageURL: "bubble_tea",
+//            time: Date()
+//        ),
+//        RecipePost(
+//            username: "John D",
+//            caption: "Spaghetti Carbonara",
+//            //message: "Learn to make authentic spaghetti carbonara with simple ingredients: pasta, eggs, pancetta, Parmesan, and black pepper.",
+//            imageURL: "spaghetti_carbonara",
+//            time: Date()
+//        ),
+//        RecipePost(
+//            username: "Emily W",
+//            caption: "Avocado Toast",
+//            //message: "An easy recipe for avocado toast with a variety of topping ideas for breakfast or a healthy snack.",
+//            imageURL: "avocado_toast",
+//            time: Date()
+//        )
+//    ]
+
     private var recipePosts: [RecipePost] = [
-        RecipePost(
-            username: "Ava K",
-            caption: "Bubble Tea",
-            message: "How to make creamy and not too sweet bubble tea using black tea, milk, and store-bought boba. Easy to make and can serve with extra sugar if needed.",
-            imageURL: "bubble_tea",
-            time: Date()
-        ),
-        RecipePost(
-            username: "John D",
-            caption: "Spaghetti Carbonara",
-            message: "Learn to make authentic spaghetti carbonara with simple ingredients: pasta, eggs, pancetta, Parmesan, and black pepper.",
-            imageURL: "spaghetti_carbonara",
-            time: Date()
-        ),
-        RecipePost(
-            username: "Emily W",
-            caption: "Avocado Toast",
-            message: "An easy recipe for avocado toast with a variety of topping ideas for breakfast or a healthy snack.",
-            imageURL: "avocado_toast",
-            time: Date()
-        )
+        RecipePost(username: "emily12345", caption: "made this over the weekened and it was very good", imageURL: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8368708.jpg&q=60&c=sc&orient=true&poi=auto&h=512", time: Date()),
+        RecipePost(username: "john2134", caption: "delicious meal can't complain", imageURL: "https://www.allrecipes.com/thmb/cLLmeWO7j9YYI66vL3eZzUL_NKQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/7501402crockpot-italian-chicken-recipe-fabeveryday4x3-223051c7188841cb8fd7189958c62f3d.jpg", time: Date())
+    ]
+    
+    private var socialPosts: [SocialEventPost] = [
+        SocialEventPost(eventName: "Taco Tuesday", author: "aidan j", maxCount: 15, date: "5:30pm on 12/2/2024", location: "Collegetown Crossings", descriptionOfEvent: "Come over to my apartment to make tacos and watch movies. Try to come with some drinks and movie recs", currentAttendees: 4, imageURL: "https://www.allrecipes.com/thmb/neJT4JLJz7ks8D0Rkvzf8fRufWY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/6900-dumplings-DDMFS-4x3-c03fe714205d4f24bd74b99768142864.jpg")
     ]
     
     //MARK: - ViewDidLoad
@@ -48,6 +59,7 @@ class HomescreenViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         title = "Home"
+        view.backgroundColor = UIColor.a4.offWhite
         
         setupCollectionView() 
     }
@@ -66,6 +78,7 @@ class HomescreenViewController: UIViewController {
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ReceipeViewCell.self, forCellWithReuseIdentifier: ReceipeViewCell.reuse)
+        collectionView.register(SocialEventViewCell.self, forCellWithReuseIdentifier: SocialEventViewCell.reuse)
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -75,10 +88,10 @@ class HomescreenViewController: UIViewController {
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -90,20 +103,44 @@ class HomescreenViewController: UIViewController {
 extension HomescreenViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recipePosts.count
+        return recipePosts.count + socialPosts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReceipeViewCell.reuse, for: indexPath) as? ReceipeViewCell else { return UICollectionViewCell() }
-        
-        cell.configure(recipePost: recipePosts[indexPath.row])
-        cell.onImageTapped = { [weak self] in
-            let recipeVC = RecipeViewController()
-            self?.navigationController?.pushViewController(recipeVC, animated: true)
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReceipeViewCell.reuse, for: indexPath) as? ReceipeViewCell else { return UICollectionViewCell() }
+//        
+//        cell.recipeConfigure(recipePost: recipePosts[indexPath.row])
+//        cell.socialConfigure(socialEvent: [indexPath.row])
+//        cell.onImageTapped = { [weak self] in
+//            let recipeVC = RecipeViewController()
+//            self?.navigationController?.pushViewController(recipeVC, animated: true)
+//        }
+//        return cell
+        if indexPath.row < recipePosts.count {
+                // Configure Recipe cell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReceipeViewCell.reuse, for: indexPath) as? ReceipeViewCell else {
+                    return UICollectionViewCell()
+                }
+                cell.recipeConfigure(recipePost: recipePosts[indexPath.row])
+                cell.onImageTapped = { [weak self] in
+                    let recipeVC = RecipeViewController()
+                    self?.navigationController?.pushViewController(recipeVC, animated: true)
+                }
+                return cell
+            } else {
+                // Configure Social cell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SocialEventViewCell.reuse, for: indexPath) as? SocialEventViewCell else {
+                    return UICollectionViewCell()
+                }
+                let socialIndex = indexPath.row - recipePosts.count
+                cell.socialConfigure(socialEvent: socialPosts[socialIndex])
+                return cell
+            }
         }
-        return cell
-    }
 }
+    
+    
+
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
@@ -113,10 +150,11 @@ extension HomescreenViewController: UICollectionViewDelegateFlowLayout {
         //let size = collectionView.frame.width / 2 - 16
         //return CGSize(width: size, height: size)
         
-        let padding: CGFloat = 16
+        let padding: CGFloat = 8
         let availableWidth = collectionView.frame.width - padding * 3
         let cellWidth = availableWidth / 2
         return CGSize(width: cellWidth, height: 216)
     }
+  
     
 }
