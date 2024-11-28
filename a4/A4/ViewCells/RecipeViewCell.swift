@@ -24,7 +24,11 @@ class ReceipeViewCell: UICollectionViewCell {
     //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = UIColor.a4.offWhite
+        contentView.backgroundColor = UIColor.white
+        contentView.layer.cornerRadius = 12
+        contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 0.5
+        contentView.layer.borderColor = UIColor.lightGray.cgColor
         
         setUpFoodImage()
         setUpUsername()
@@ -38,37 +42,52 @@ class ReceipeViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure cell function
-    func configure(recipePost: RecipePost){
+    func recipeConfigure(recipePost: RecipePost){
         //setupimage
-//        let recipeImageUrl = URL(string: recipePost.imageURL)
-//        foodImage.sd_setImage(with: recipeImageUrl)
-        foodImage.image = UIImage(named: recipePost.imageURL)
+        let recipeImageUrl = URL(string: recipePost.imageURL)
+        foodImage.sd_setImage(with: recipeImageUrl)
+        //foodImage.image = UIImage(named: recipePost.imageURL)
         username.text = recipePost.username
-        caption.text = recipePost.caption
+        //caption.text = recipePost.caption
         timePassedSincePosted.text = recipePost.time.convertToAgo()
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 80
+        paragraphStyle.headIndent = 0// First line stays aligned with the username// Indentation for subsequent lines
         
+        let attributedCaption = NSAttributedString(
+            string: recipePost.caption,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular).rounded,
+                .foregroundColor: UIColor.a4.black,
+                .paragraphStyle: paragraphStyle
+            ]
+        )
+        caption.attributedText = attributedCaption
+    
         
     }
     
     //MARK: Set up functions
     private func setUpFoodImage(){
+        foodImage.contentMode = .scaleAspectFill
+        foodImage.clipsToBounds = true
         foodImage.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         foodImage.addGestureRecognizer(tapGesture)
-        foodImage.clipsToBounds = true
-        foodImage.layer.cornerRadius = 10
+       
         contentView.addSubview(foodImage)
         
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().inset(30)
+            make.height.equalTo(contentView.snp.width).multipliedBy(0.75)
         }
     }
     
     private func setUpUsername(){
         username.textColor = UIColor.a4.black
-        username.font = .systemFont(ofSize: 16, weight: .bold).rounded
-        username.numberOfLines = 1
+        username.font = .systemFont(ofSize: 14, weight: .semibold).rounded
+        //username.numberOfLines = 1
         
         contentView.addSubview(username)
         username.snp.makeConstraints { make in
@@ -79,22 +98,33 @@ class ReceipeViewCell: UICollectionViewCell {
     
     private func setUpCaption(){
         caption.textColor = UIColor.a4.black
-        caption.font = .systemFont(ofSize: 16, weight: .bold).rounded
-        caption.numberOfLines = 2
+        caption.font = .systemFont(ofSize: 12, weight: .regular).rounded
+        caption.numberOfLines = 0
+        caption.lineBreakMode = .byWordWrapping
+        //caption.firstBaselineAnchor.constraint(equalTo: username.lastBaselineAnchor).isActive = true
         
         contentView.addSubview(caption)
+      
         caption.snp.makeConstraints { make in
             make.top.equalTo(foodImage.snp.bottom).offset(6)
-            make.leading.equalTo(username.snp.trailing).offset(2)
+            make.leading.equalToSuperview().offset(4)
+           // make.top.equalTo(username.snp.top) // Align first line with username's top
+            make.trailing.equalToSuperview().offset(4)
+            
+            
         }
     }
     
     private func setUpBookmarkButton(){
-        
+        bookmarkButton.setImage(UIImage(named: "notBookmarked"), for: .normal)
+        bookmarkButton.tintColor = .darkGray
         contentView.addSubview(bookmarkButton)
+        
         bookmarkButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(6)
-            make.trailing.equalToSuperview().inset(6)
+            make.top.equalToSuperview().inset(8)
+            make.trailing.equalToSuperview().inset(12)
+            make.height.equalTo(20)
+            make.width.equalTo(14)
         }
         
     }
