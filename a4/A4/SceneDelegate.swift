@@ -18,9 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // 2. Create a new UIWindow and pass in a UIWindowScene
         let window = UIWindow(windowScene: windowScene)
+        
+        let rootVC = MainTabBarController()
+        //window.rootViewController = MainTabBarController()
+        //window.makeKeyAndVisible()
 
         // 3. Create a view hierarchy programmatically
-        let rootVC = HomescreenViewController()
+        //let rootVC = HomescreenViewController()
         let navController = UINavigationController(rootViewController: rootVC)
 
         // 4. Set the navigation controller as the window's root view controller

@@ -153,7 +153,10 @@ extension HomescreenViewController: UICollectionViewDelegateFlowLayout {
         let padding: CGFloat = 8
         let availableWidth = collectionView.frame.width - padding * 3
         let cellWidth = availableWidth / 2
-        return CGSize(width: cellWidth, height: 216)
+        if indexPath.row < recipePosts.count {
+            return CGSize(width: cellWidth, height: 200) //216
+        }
+        return CGSize(width: cellWidth, height: 250) //300
     }
   
     

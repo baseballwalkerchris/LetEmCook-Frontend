@@ -51,13 +51,13 @@ class ReceipeViewCell: UICollectionViewCell {
         //caption.text = recipePost.caption
         timePassedSincePosted.text = recipePost.time.convertToAgo()
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 80
+        paragraphStyle.firstLineHeadIndent = CGFloat(recipePost.username.count * 8)
         paragraphStyle.headIndent = 0// First line stays aligned with the username// Indentation for subsequent lines
         
         let attributedCaption = NSAttributedString(
             string: recipePost.caption,
             attributes: [
-                .font: UIFont.systemFont(ofSize: 14, weight: .regular).rounded,
+                .font: UIFont.systemFont(ofSize: 14, weight: .light).rounded,
                 .foregroundColor: UIColor.a4.black,
                 .paragraphStyle: paragraphStyle
             ]
@@ -92,25 +92,25 @@ class ReceipeViewCell: UICollectionViewCell {
         contentView.addSubview(username)
         username.snp.makeConstraints { make in
             make.top.equalTo(foodImage.snp.bottom).offset(6)
-            make.leading.equalToSuperview().inset(4)
+            make.leading.equalToSuperview().inset(8)
         }
     }
     
     private func setUpCaption(){
         caption.textColor = UIColor.a4.black
-        caption.font = .systemFont(ofSize: 12, weight: .regular).rounded
+        caption.font = .systemFont(ofSize: 10, weight: .light).rounded
         caption.numberOfLines = 0
         caption.lineBreakMode = .byWordWrapping
         //caption.firstBaselineAnchor.constraint(equalTo: username.lastBaselineAnchor).isActive = true
+
         
         contentView.addSubview(caption)
       
         caption.snp.makeConstraints { make in
             make.top.equalTo(foodImage.snp.bottom).offset(6)
-            make.leading.equalToSuperview().offset(4)
+            make.leading.equalToSuperview().offset(8)
            // make.top.equalTo(username.snp.top) // Align first line with username's top
-            make.trailing.equalToSuperview().offset(4)
-            
+            make.trailing.equalToSuperview().offset(12)
             
         }
     }
@@ -145,4 +145,5 @@ class ReceipeViewCell: UICollectionViewCell {
     }
     
 }
+
 

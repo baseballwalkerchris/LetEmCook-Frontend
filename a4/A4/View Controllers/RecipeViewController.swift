@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import SnapKit
+import SwiftUI
 
 class RecipeViewController: UIViewController {
     
@@ -251,3 +252,5 @@ extension RecipeViewController: UICollectionViewDelegateFlowLayout {
     }
     
 }
+
+
