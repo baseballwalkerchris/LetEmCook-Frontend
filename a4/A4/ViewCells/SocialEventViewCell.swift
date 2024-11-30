@@ -33,6 +33,8 @@ class SocialEventViewCell: UICollectionViewCell {
     private let descriptionTitle = UILabel()
     private let descriptionMessage = UILabel()
     
+    private let gradientLayer = CAGradientLayer()
+    
     static let reuse = "SocialEventViewCellReuse"
     
     //MARK: - Inits
@@ -70,54 +72,65 @@ class SocialEventViewCell: UICollectionViewCell {
         let recipeImageUrl = URL(string: socialEvent.imageURL)
         foodImage.sd_setImage(with: recipeImageUrl)
         eventName.text = socialEvent.eventName
-        author.text = socialEvent.author
+        author.text = "From \(socialEvent.author)"
         attendeesLabel.text = "\(socialEvent.maxCount) total"
         locationLabel.text = socialEvent.location
         timeLabel.text = socialEvent.date
         descriptionMessage.text = socialEvent.descriptionOfEvent
+        
       
     }
     
     //MARK: Set up functions
     private func setUpFoodImage(){
-        foodImage.clipsToBounds = true
+        //foodImage.clipsToBounds = true
         foodImage.contentMode = .scaleAspectFill
+        foodImage.layer.shadowColor = UIColor.black.cgColor
+        foodImage.layer.shadowOpacity = 1.0 // Adjust transparency
+        foodImage.layer.shadowRadius = 15 // Soften the shadow
+        foodImage.layer.shadowOffset = CGSize(width: -15, height: -15) // Position the shadow
+        foodImage.clipsToBounds = false // Make sure the shadow is not clipped
         contentView.addSubview(foodImage)
         
         
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(70)
+            make.bottom.equalToSuperview().inset(140)
         }
     }
     
     private func setUpBookmarkButton(){
+        bookmarkButton.setImage(UIImage(named: "notBookmarked"), for: .normal)
+        bookmarkButton.tintColor = .darkGray
         contentView.addSubview(bookmarkButton)
         
         bookmarkButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(6)
-            make.trailing.equalToSuperview().inset(6)
+            make.top.equalToSuperview().inset(8)
+            make.trailing.equalToSuperview().inset(12)
+            make.height.equalTo(20)
+            make.width.equalTo(14)
         }
     }
     
     private func setUpEventName(){
         eventName.textColor = UIColor.a4.white
-        eventName.font = .systemFont(ofSize: 24, weight: .bold).rounded
-        contentView.addSubview(eventName)
+        eventName.font = .systemFont(ofSize: 18, weight: .bold).rounded
+        foodImage.addSubview(eventName)
         
         eventName.snp.makeConstraints{ make in
-            make.top.equalToSuperview().inset(25)
+            make.bottom.equalTo(foodImage.snp.bottom).inset(6)
             make.leading.equalToSuperview().inset(6)
         }
     }
     
     private func setUpAuthorName(){
         author.textColor = UIColor.a4.white
-        author.font = .systemFont(ofSize: 12, weight: .semibold).rounded
-        contentView.addSubview(author)
+        author.font = .systemFont(ofSize: 10, weight: .light).rounded
+        foodImage.addSubview(author)
+        
         
         author.snp.makeConstraints{ make in
-            make.top.equalTo(eventName.snp.bottom).offset(4)
+            make.top.equalTo(eventName.snp.bottom).offset(1)
             make.leading.equalToSuperview().inset(8)
         }
     }
@@ -127,21 +140,21 @@ class SocialEventViewCell: UICollectionViewCell {
         contentView.addSubview(attendeesImage)
         
         attendeesImage.snp.makeConstraints{ make in
-            make.width.equalTo(10)
+            make.width.equalTo(9.23)
             make.height.equalTo(10)
             make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(foodImage.snp.bottom).offset(4)
+            make.top.equalTo(foodImage.snp.bottom).offset(10)
         }
     }
     
     private func setUpAttendeesLabel(){
         attendeesLabel.textColor = UIColor.a4.black
-        attendeesLabel.font = .systemFont(ofSize: 10, weight: .semibold).rounded
+        attendeesLabel.font = .systemFont(ofSize: 10, weight: .light).rounded
         contentView.addSubview(attendeesLabel)
 
         attendeesLabel.snp.makeConstraints{ make in
             make.leading.equalTo(attendeesImage.snp.trailing).offset(4)
-            make.top.equalTo(foodImage.snp.bottom).offset(4)
+            make.centerY.equalTo(attendeesImage.snp.centerY)
         }
     }
     
@@ -150,21 +163,22 @@ class SocialEventViewCell: UICollectionViewCell {
         contentView.addSubview(timeImage)
         
         timeImage.snp.makeConstraints{ make in
-            make.width.equalTo(10)
-            make.height.equalTo(10)
+            make.width.equalTo(8)
+            make.height.equalTo(8)
             make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(attendeesImage.snp.bottom).offset(4)
+            make.top.equalTo(attendeesImage.snp.bottom).offset(8)
         }
     }
     
     private func setUpTimeLabel(){
-        attendeesLabel.textColor = UIColor.a4.black
-        attendeesLabel.font = .systemFont(ofSize: 10, weight: .semibold).rounded
+        timeLabel.textColor = UIColor.a4.black
+        timeLabel.font = .systemFont(ofSize: 10, weight: .light).rounded
         contentView.addSubview(timeLabel)
 
         timeLabel.snp.makeConstraints{ make in
             make.leading.equalTo(timeImage.snp.trailing).offset(4)
-            make.top.equalTo(attendeesImage.snp.bottom).offset(4)
+           // make.top.equalTo(attendeesImage.snp.bottom).offset(8)
+            make.centerY.equalTo(timeImage.snp.centerY)
         }
     }
     
@@ -173,46 +187,61 @@ class SocialEventViewCell: UICollectionViewCell {
         contentView.addSubview(locationImage)
         
         locationImage.snp.makeConstraints{ make in
-            make.width.equalTo(10)
-            make.height.equalTo(10)
+            make.width.equalTo(7.68)
+            make.height.equalTo(12.43)
             make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(timeImage.snp.bottom).offset(4)
+            make.top.equalTo(timeImage.snp.bottom).offset(8)
         }
     }
     
     private func setUpLocationLabel(){
         locationLabel.textColor = UIColor.a4.black
-        locationLabel.font = .systemFont(ofSize: 10, weight: .semibold).rounded
+        locationLabel.font = .systemFont(ofSize: 10, weight: .light).rounded
         contentView.addSubview(locationLabel)
 
         locationLabel.snp.makeConstraints{ make in
-            make.leading.equalTo(timeImage.snp.trailing).offset(4)
-            make.top.equalTo(locationImage.snp.bottom).offset(4)
+            make.leading.equalTo(locationImage.snp.trailing).offset(4)
+            make.top.equalTo(timeImage.snp.bottom).offset(8)
         }
     }
     
     private func setUpDescriptionTitle(){
+        descriptionTitle.text = "DESCRIPTION"
         descriptionTitle.textColor = UIColor.a4.black
-        descriptionTitle.font = .systemFont(ofSize: 14, weight: .bold).rounded
+        descriptionTitle.font = .systemFont(ofSize: 12, weight: .semibold).rounded
         contentView.addSubview(descriptionTitle)
         
         descriptionTitle.snp.makeConstraints{ make in
             make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(locationImage.snp.bottom).offset(4)
+            make.top.equalTo(locationImage.snp.bottom).offset(8)
         }
     }
     
     private func setUpDescriptionMessage(){
         descriptionMessage.textColor = UIColor.a4.black
-        descriptionMessage.font = .systemFont(ofSize: 14, weight: .semibold).rounded
-        descriptionMessage.numberOfLines = 3
+        descriptionMessage.font = .systemFont(ofSize: 10, weight: .light).rounded
+        descriptionMessage.numberOfLines = 0
+        descriptionMessage.lineBreakMode = .byWordWrapping
         contentView.addSubview(descriptionMessage)
         
         descriptionMessage.snp.makeConstraints{ make in
-            make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(descriptionTitle.snp.bottom).offset(4)
+            make.leading.trailing.equalToSuperview().inset(10)
+            make.top.equalTo(descriptionTitle.snp.bottom).offset(2)
         }
     }
     
+    
+    private func setUpGradientLayer() {
+        gradientLayer.colors = [UIColor.black.withAlphaComponent(0.8).cgColor, UIColor.clear.cgColor]
+        gradientLayer.locations = [0.0, 1.0] // Dark at bottom, transparent at top
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.frame = CGRect(x: 0, y: foodImage.frame.height - 100, width: foodImage.frame.width, height: 100)
+        foodImage.layer.addSublayer(gradientLayer)
+        
+        
+    }
+    
 }
+
 
