@@ -13,7 +13,8 @@ import SwiftUI
 class RecipeViewController: UIViewController {
     
     // MARK: - Properties (view)
-    //    private var collectionView: UICollectionView!
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let recipeImageView = UIImageView()
     private let recipeTitleLabel = UILabel()
     private let authorLabel = UILabel()
@@ -21,9 +22,13 @@ class RecipeViewController: UIViewController {
     private let servingsLabel = UILabel()
     private let ratingsLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private let dividerView = UIView()
+    private let dividerViewOne = UIView()
     private let ingredientsLabel = UILabel()
     private var ingredientsCollectionView: UICollectionView!
+    private let dividerViewTwo = UIView()
+    private let directionsLabel = UILabel()
+    private var directionsCollectionView: UICollectionView!
+
     
     // MARK: - Properties (data)
    
@@ -34,6 +39,12 @@ class RecipeViewController: UIViewController {
         UIImage(named: "milk"), UIImage(named: "boba"),
         UIImage(named: "black_tea"), UIImage(named: "syrup"),
         UIImage(named: "green_tea")
+    ]
+    
+    private var directions: [Direction] = [
+        Direction(stepNumber: 1, title: "Add ingredients", description: "Add milk, boba, black tea, syrup, and green tea to a blender.", isCompleted: true),
+        Direction(stepNumber: 2, title: "Blend", description: "Blend until smooth.", isCompleted: false),
+        Direction(stepNumber: 3, title: "Strain", description: "Strain into a glass.", isCompleted: false),
     ]
     
     
@@ -54,6 +65,7 @@ class RecipeViewController: UIViewController {
         view.backgroundColor = UIColor.a4.offWhite
         title = "Recipe"
         
+        setupScrollView()
         setupRecipeImageView()
         setupRecipeTitleLabel()
         setupAuthorLabel()
@@ -61,25 +73,50 @@ class RecipeViewController: UIViewController {
         setupServingsLabel()
         setupRatingsLabel()
         setupDescriptionLabel()
-        setupDividerView()
+        setupDividerViewOne()
         setupIngredientsLabel()
         setupIngredientsCollectionView()
+        setupDividerViewTwo()
+        setupDirectionsLabel()
+        setupDirectionsCollectionView()
+        setupPanGesture()
     }
     
     //MARK: - Set up views
 
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+    }
+    
     private func setupRecipeImageView() {
         recipeImageView.image = UIImage(named: "bubble_tea")
         
-        view.addSubview(recipeImageView)
+        contentView.addSubview(recipeImageView)
         recipeImageView.translatesAutoresizingMaskIntoConstraints = false
         recipeImageView.contentMode = .scaleAspectFill
         recipeImageView.clipsToBounds = true
         
         NSLayoutConstraint.activate([
-               recipeImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-               recipeImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-               recipeImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            recipeImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            recipeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            recipeImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                recipeImageView.heightAnchor.constraint(equalToConstant: 300),
         ])
     }
@@ -88,12 +125,12 @@ class RecipeViewController: UIViewController {
         recipeTitleLabel.text = "BUBBLE TEA"
         recipeTitleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         
-        view.addSubview(recipeTitleLabel)
+        contentView.addSubview(recipeTitleLabel)
         recipeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             recipeTitleLabel.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: 16),
-            recipeTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            recipeTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16)
         ])
     }
     
@@ -102,7 +139,7 @@ class RecipeViewController: UIViewController {
         authorLabel.font = UIFont.systemFont(ofSize: 16)
         authorLabel.textColor = .gray
        
-        view.addSubview(authorLabel)
+        contentView.addSubview(authorLabel)
         authorLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -116,12 +153,12 @@ class RecipeViewController: UIViewController {
         timeLabel.font = UIFont.systemFont(ofSize: 16)
         timeLabel.textColor = UIColor.a4.black
         
-        view.addSubview(timeLabel)
+        contentView.addSubview(timeLabel)
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             timeLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 16),
-            timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            timeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
         ])
     }
     
@@ -130,7 +167,7 @@ class RecipeViewController: UIViewController {
         servingsLabel.font = UIFont.systemFont(ofSize: 16)
         servingsLabel.textColor = UIColor.a4.black
         
-        view.addSubview(servingsLabel)
+        contentView.addSubview(servingsLabel)
         servingsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -144,7 +181,7 @@ class RecipeViewController: UIViewController {
         ratingsLabel.font = UIFont.systemFont(ofSize: 16)
         ratingsLabel.textColor = UIColor.a4.black
         
-        view.addSubview(ratingsLabel)
+        contentView.addSubview(ratingsLabel)
         ratingsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -158,27 +195,27 @@ class RecipeViewController: UIViewController {
         descriptionLabel.font = UIFont.systemFont(ofSize: 16)
         descriptionLabel.numberOfLines = 0
         
-        view.addSubview(descriptionLabel)
+        contentView.addSubview(descriptionLabel)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 16),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
         ])
     }
     
-    private func setupDividerView() {
-        dividerView.backgroundColor = .darkGray
+    private func setupDividerViewOne() {
+        dividerViewOne.backgroundColor = .darkGray
         
-        view.addSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(dividerViewOne)
+        dividerViewOne.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            dividerView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            dividerView.heightAnchor.constraint(equalToConstant: 1)
+            dividerViewOne.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
+            dividerViewOne.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            dividerViewOne.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            dividerViewOne.heightAnchor.constraint(equalToConstant: 1)
         ])
     }
     
@@ -186,17 +223,16 @@ class RecipeViewController: UIViewController {
         ingredientsLabel.text = "Ingredients"
         ingredientsLabel.font = UIFont.boldSystemFont(ofSize: 20)
         
-        view.addSubview(ingredientsLabel)
+        contentView.addSubview(ingredientsLabel)
         ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            ingredientsLabel.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 16),
-            ingredientsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            ingredientsLabel.topAnchor.constraint(equalTo: dividerViewOne.bottomAnchor, constant: 16),
+            ingredientsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
         ])
     }
     
     private func setupIngredientsCollectionView() {
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 150, height: 150)
@@ -211,16 +247,109 @@ class RecipeViewController: UIViewController {
         ingredientsCollectionView.register(IngredientViewCell.self, forCellWithReuseIdentifier: IngredientViewCell.reuse)
         ingredientsCollectionView.backgroundColor = UIColor.a4.offWhite
         
-        view.addSubview(ingredientsCollectionView)
+        contentView.addSubview(ingredientsCollectionView)
         ingredientsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             ingredientsCollectionView.topAnchor.constraint(equalTo: ingredientsLabel.bottomAnchor, constant: 8),
-            ingredientsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            ingredientsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            ingredientsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            ingredientsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             ingredientsCollectionView.heightAnchor.constraint(equalToConstant: 150),
         ])
+    }
+    
+    private func setupDividerViewTwo() {
+        dividerViewTwo.backgroundColor = .darkGray
+        
+        contentView.addSubview(dividerViewTwo)
+        dividerViewTwo.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            dividerViewTwo.topAnchor.constraint(equalTo: ingredientsCollectionView.bottomAnchor, constant: 20),
+            dividerViewTwo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            dividerViewTwo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            dividerViewTwo.heightAnchor.constraint(equalToConstant: 1)
+        ])
+    }
+    
+    private func setupDirectionsLabel() {
+        directionsLabel.text = "DIRECTIONS"
+        directionsLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        
+        contentView.addSubview(directionsLabel)
+        directionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            directionsLabel.topAnchor.constraint(equalTo: dividerViewTwo.bottomAnchor, constant: 4),
+            directionsLabel.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
+        ])
+    }
+    
+    private func setupDirectionsCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: 150, height: 150)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 5
+        layout.sectionInset = .zero
 
+        
+        directionsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        directionsCollectionView.delegate = self
+        directionsCollectionView.dataSource = self
+        directionsCollectionView.register(DirectionViewCell.self, forCellWithReuseIdentifier: DirectionViewCell.reuse)
+        directionsCollectionView.backgroundColor = UIColor.a4.offWhite
+        directionsCollectionView.isScrollEnabled = true
+
+        
+        contentView.addSubview(directionsCollectionView)
+        directionsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            directionsCollectionView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 8),
+            directionsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            directionsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            directionsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+            directionsCollectionView.heightAnchor.constraint(equalToConstant: 200)
+        ])
+    }
+    
+    
+    
+    
+    private func setupPanGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        contentView.addGestureRecognizer(panGesture)
+    }
+    
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let currentTransform = contentView.transform.ty
+        let maxOverlayPosition = -recipeImageView.frame.height + 150 // Fully overlay the image
+        let minOriginalPosition: CGFloat = 0 // Fully revealed image
+        
+        // Adjust the `contentView` position within allowed limits
+        let newTransformY = max(maxOverlayPosition, min(minOriginalPosition, currentTransform + translation.y))
+        contentView.transform = CGAffineTransform(translationX: 0, y: newTransformY)
+        
+        // Reset the translation to 0 for incremental adjustment
+        gesture.setTranslation(.zero, in: view)
+
+        if gesture.state == .ended {
+            let velocity = gesture.velocity(in: view).y
+            let threshold: CGFloat = 200 // Velocity threshold for snapping
+            
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                if velocity < -threshold || newTransformY < maxOverlayPosition / 2 {
+                    // Snap to fully overlay
+                    self.contentView.transform = CGAffineTransform(translationX: 0, y: maxOverlayPosition)
+                } else {
+                    // Snap back to fully revealed
+                    self.contentView.transform = .identity
+                }
+            })
+        }
     }
 }
 
@@ -229,15 +358,31 @@ class RecipeViewController: UIViewController {
 extension RecipeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ingredients.count
+        if collectionView == ingredientsCollectionView {
+            return ingredients.count
+        } else {
+            return directions.count
+        }
     }
      
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
-        let image = ingredientImages[indexPath.item]
-        let text = ingredients[indexPath.item]
-        cell.configure(with: image, text: text)
-        return cell
+        if collectionView == ingredientsCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
+            let image = ingredientImages[indexPath.item]
+            let text = ingredients[indexPath.item]
+            cell.configure(with: image, text: text)
+            return cell
+        } else {
+            // TODO: hard code for now
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DirectionViewCell.reuse, for: indexPath) as? DirectionViewCell else { return UICollectionViewCell() }
+            let direction = directions[indexPath.item]
+            cell.configure(stepNumber: direction.stepNumber, title: direction.title, description: direction.description, isCompleted: direction.isCompleted)
+            cell.buttonAction = { [weak self] in
+                self?.directions[indexPath.item].isCompleted.toggle()
+                collectionView.reloadItems(at: [indexPath])
+            }
+            return cell
+        }
     }
 }
 
@@ -246,11 +391,17 @@ extension RecipeViewController: UICollectionViewDataSource, UICollectionViewDele
 extension RecipeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = collectionView.frame.width / 3 - 16
-        return CGSize(width: size, height: 120)
-        
+        if collectionView == ingredientsCollectionView {
+            let size = collectionView.frame.width / 3 - 16
+            return CGSize(width: size, height: 120)
+        } else {
+            // TODO: hard code for now
+            return CGSize(width: collectionView.frame.width, height: 100)
+        }
     }
     
 }
+
+
 
 
