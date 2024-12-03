@@ -27,7 +27,7 @@ class RecipeViewController: UIViewController {
     private var ingredientsCollectionView: UICollectionView!
     private let dividerViewTwo = UIView()
     private let directionsLabel = UILabel()
-    private var directionsCollectionView: UICollectionView!
+    private var directionsTableView = UITableView()
 
     
     // MARK: - Properties (data)
@@ -78,7 +78,7 @@ class RecipeViewController: UIViewController {
         setupIngredientsCollectionView()
         setupDividerViewTwo()
         setupDirectionsLabel()
-        setupDirectionsCollectionView()
+        setupDirectionsTableView()
         setupPanGesture()
     }
     
@@ -285,38 +285,54 @@ class RecipeViewController: UIViewController {
         ])
     }
     
-    private func setupDirectionsCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 150, height: 150)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 5
-        layout.sectionInset = .zero
-
+//    private func setupDirectionsTableView() {
+//        directionsTableView.register(DirectionTableViewCell.self, forCellReuseIdentifier: DirectionTableViewCell.reuse)
+//        
+//        directionsTableView.delegate = self
+//        directionsTableView.dataSource = self
+//        directionsTableView.backgroundColor = UIColor.a4.offWhite
+//
+//        
+//        contentView.addSubview(directionsTableView)
+//        directionsTableView.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            directionsTableView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 8),
+//            directionsTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            directionsTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+//            directionsTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+//            directionsTableView.heightAnchor.constraint(equalToConstant: 200)
+//        ])
+//    }
+//    
+    
+    private func setupDirectionsTableView() {
+        directionsTableView.register(DirectionTableViewCell.self, forCellReuseIdentifier: DirectionTableViewCell.reuse)
         
-        directionsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        directionsTableView.delegate = self
+        directionsTableView.dataSource = self
+        directionsTableView.backgroundColor = UIColor.a4.offWhite
+        directionsTableView.isScrollEnabled = true // Disable scrolling to make it expand fully
         
-        directionsCollectionView.delegate = self
-        directionsCollectionView.dataSource = self
-        directionsCollectionView.register(DirectionViewCell.self, forCellWithReuseIdentifier: DirectionViewCell.reuse)
-        directionsCollectionView.backgroundColor = UIColor.a4.offWhite
-        directionsCollectionView.isScrollEnabled = true
-
+        directionsTableView.rowHeight = UITableView.automaticDimension
+        directionsTableView.estimatedRowHeight = 44 // A reasonable default value
         
-        contentView.addSubview(directionsCollectionView)
-        directionsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(directionsTableView)
+        directionsTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            directionsCollectionView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 8),
-            directionsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            directionsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            directionsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            directionsCollectionView.heightAnchor.constraint(equalToConstant: 200)
+            directionsTableView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 8),
+            directionsTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            directionsTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            directionsTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor) // Ensure it stays in the scroll view
         ])
     }
     
-    
-    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        directionsTableView.layoutIfNeeded()
+        directionsTableView.heightAnchor.constraint(equalToConstant: directionsTableView.contentSize.height).isActive = true
+    }
     
     private func setupPanGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
@@ -372,17 +388,18 @@ extension RecipeViewController: UICollectionViewDataSource, UICollectionViewDele
             let text = ingredients[indexPath.item]
             cell.configure(with: image, text: text)
             return cell
-        } else {
-            // TODO: hard code for now
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DirectionViewCell.reuse, for: indexPath) as? DirectionViewCell else { return UICollectionViewCell() }
-            let direction = directions[indexPath.item]
-            cell.configure(stepNumber: direction.stepNumber, title: direction.title, description: direction.description, isCompleted: direction.isCompleted)
-            cell.buttonAction = { [weak self] in
-                self?.directions[indexPath.item].isCompleted.toggle()
-                collectionView.reloadItems(at: [indexPath])
-            }
-            return cell
+//        } else {
+//            // TODO: hard code for now
+//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DirectionViewCell.reuse, for: indexPath) as? DirectionViewCell else { return UICollectionViewCell() }
+//            let direction = directions[indexPath.item]
+//            cell.configure(stepNumber: direction.stepNumber, title: direction.title, description: direction.description, isCompleted: direction.isCompleted)
+//            cell.buttonAction = { [weak self] in
+//                self?.directions[indexPath.item].isCompleted.toggle()
+//                collectionView.reloadItems(at: [indexPath])
+//            }
+//            return cell
         }
+        return UICollectionViewCell()
     }
 }
 
@@ -402,6 +419,34 @@ extension RecipeViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
+// MARK: - UITableView Delegate
 
+extension RecipeViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+}
+
+// MARK: - UITableView DataSource
+
+extension RecipeViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return directions.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DirectionTableViewCell.reuse, for: indexPath) as? DirectionTableViewCell else { return UITableViewCell() }
+        let direction = directions[indexPath.item]
+        cell.configure(stepNumber: direction.stepNumber, title: direction.title, description: direction.description, isCompleted: direction.isCompleted)
+        cell.buttonAction = { [weak self] in
+            self?.directions[indexPath.item].isCompleted.toggle()
+            tableView.reloadData()}
+        return cell
+    }
+    
+}
 
 

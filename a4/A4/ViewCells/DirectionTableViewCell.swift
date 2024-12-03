@@ -7,21 +7,21 @@
 
 import UIKit
 
-class DirectionViewCell: UICollectionViewCell {
+class DirectionTableViewCell: UITableViewCell {
     
     // MARK: - Properties (view)
     private let stepButton = UIButton()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     
-    static let reuse = "DirectionViewCellReuse"
+    static let reuse = "DirectionTableCellViewReuse"
     
     // Closure for button action
     var buttonAction: (() -> Void)?
     
     // MARK: - Inits
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.a4.offWhite
         
         setupStepButton()
