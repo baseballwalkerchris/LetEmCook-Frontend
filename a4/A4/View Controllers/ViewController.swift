@@ -21,30 +21,6 @@ class HomescreenViewController: UIViewController {
    
     
     // MARK: - Properties (data)
-//    private var recipePosts: [RecipePost] = [
-//        RecipePost(
-//            username: "Ava K",
-//            caption: "Bubble Tea",
-//            //message: "How to make creamy and not too sweet bubble tea using black tea, milk, and store-bought boba. Easy to make and can serve with extra sugar if needed.",
-//            imageURL: "bubble_tea",
-//            time: Date()
-//        ),
-//        RecipePost(
-//            username: "John D",
-//            caption: "Spaghetti Carbonara",
-//            //message: "Learn to make authentic spaghetti carbonara with simple ingredients: pasta, eggs, pancetta, Parmesan, and black pepper.",
-//            imageURL: "spaghetti_carbonara",
-//            time: Date()
-//        ),
-//        RecipePost(
-//            username: "Emily W",
-//            caption: "Avocado Toast",
-//            //message: "An easy recipe for avocado toast with a variety of topping ideas for breakfast or a healthy snack.",
-//            imageURL: "avocado_toast",
-//            time: Date()
-//        )
-//    ]
-
     private var recipePosts: [RecipePost] = [
         RecipePost(username: "emily12345", caption: "made this over the weekened and it was very good", imageURL: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8368708.jpg&q=60&c=sc&orient=true&poi=auto&h=512", time: Date()),
         RecipePost(username: "john2134", caption: "delicious meal can't complain", imageURL: "https://www.allrecipes.com/thmb/cLLmeWO7j9YYI66vL3eZzUL_NKQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/7501402crockpot-italian-chicken-recipe-fabeveryday4x3-223051c7188841cb8fd7189958c62f3d.jpg", time: Date())

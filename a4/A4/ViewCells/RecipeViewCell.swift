@@ -79,7 +79,7 @@ class ReceipeViewCell: UICollectionViewCell {
         
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(30)
+//            make.bottom.equalToSuperview().inset(30)
             make.height.equalTo(contentView.snp.width).multipliedBy(0.75)
         }
     }
