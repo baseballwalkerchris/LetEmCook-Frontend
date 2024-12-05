@@ -58,7 +58,7 @@ class NetworkManager {
         
         decoder.dateDecodingStrategy = .iso8601
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-
+        
         // Create the request
         AF.request(endpoint, method: .get)
             .validate()
@@ -70,6 +70,42 @@ class NetworkManager {
                     completion(posts)
                 case .failure(let error):
                     print("Error in NetworkManager.fetchRoster: \(error.localizedDescription)")
+                }
+            }
+    }
+        
+    func createRecipe(
+        userId: String, title: String, imageUrl: String, time: Int, servings: Int, ratings: Int, description: String,
+        ingredients: [Ingredient], directions: [Direction], completion: @escaping (Recipe) -> Void) {
+            
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        
+        let endpoint: String = "\(devEndpoint)/users/1/stories/"
+        
+        let parameters: Parameters = [
+            "user_id": userId,
+            "title": title,
+            "image_url": imageUrl,
+            "time": time,
+            "servings": servings,
+            "ratings": ratings,
+            "description": description,
+            "ingredients": ingredients,
+            "directions": directions
+        ]
+        
+        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate()
+            .responseDecodable(of: StoryResponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let storyResponse):
+                    print("Successfully added recipe with ID: \(storyResponse.data.id)")
+                    print(storyResponse.data)
+                    completion(storyResponse.data)
+                case .failure(let error):
+                    print("Error in NetworkManager.createRecipe: \(error.localizedDescription)")
+                    print("No response data")
                 }
             }
     }

@@ -30,9 +30,9 @@ class IngredientViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure cell function
-    func configure(with image: UIImage?, text: String) {
-        imageView.image = image
-        label.text = text
+    func configure(ingredient: Ingredient) {
+        imageView.image = UIImage(named: ingredient.imageUrl)
+        label.text = ingredient.name
     }
     
     //MARK: Set up functions

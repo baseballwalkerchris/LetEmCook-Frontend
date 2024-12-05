@@ -36,16 +36,15 @@ class CreatePostViewController: UIViewController {
     let timePicker = UIPickerView()
     let servingsPicker = UIPickerView()
     let ratingPicker = UIPickerView()
+    let recipeDescriptionLabel = UILabel()
     let recipeDescriptionTextView = UITextView()
-    
     let ingredientsLabel = UILabel()
-//    let ingredientsCollectionView: UICollectionView
+    var ingredientsCollectionView: UICollectionView!
     let addIngredientButton = UIButton()
-    
     let directionsLabel = UILabel()
     let directionsStackView = UIStackView()
     let addDirectionButton = UIButton()
-//    let publishButton = UIButton()
+    let recipePublishButton = UIButton()
 
     // Properties for events
     let eventScrollView = UIScrollView()
@@ -53,8 +52,14 @@ class CreatePostViewController: UIViewController {
     // MARK: properties (data)
     // Data for pickers
     let timeOptions = ["5 min", "10 min", "15 min", "30 min", "1 hour", "2 hours"]
-    let servingsOptions = ["1 person", "2 people", "4 people", "6 people", "8+ people"]
-    let ratingOptions = ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"]
+    let servingsOptions = ["1", "2", "4", "6", "8+"]
+    let ratingOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    
+    // TODO: fetch all the ingredients from fridge
+    var ingredients: [Ingredient] = [
+        Ingredient(id: 0, name: "Tomato", quantity: "5 of them", imageUrl: "tomato"),
+        Ingredient(id: 1, name: "Cucumber", quantity: "6 long ones", imageUrl: "cucumber")
+    ]
     
     // MARK: - Lifecycle
     
@@ -62,7 +67,7 @@ class CreatePostViewController: UIViewController {
         super.viewDidLoad()
         
         title = "New Post"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor.a4.offWhite
         
         setupSegmentedControl()
         
@@ -90,7 +95,14 @@ class CreatePostViewController: UIViewController {
         setupTimePicker()
         setupServingsPicker()
         setupRatingsPicker()
-
+        setupRecipeDescriptionLabel()
+        setupRecipeDescriptionTextView()
+        setupIngredientsLabel()
+        setupIngredientsCollectionView()
+        setupAddIngredientButton()
+        setupDirectionsLabel()
+        setupDirectionsSection()
+        setupRecipePublishButton()
 
         // Event views
         setupEventScrollView()
@@ -242,7 +254,7 @@ class CreatePostViewController: UIViewController {
     }
     
     private func setupPublishButton() {
-        publishButton.layer.cornerRadius = 10
+        publishButton.layer.cornerRadius = 20
         publishButton.backgroundColor = .systemBlue
         publishButton.setTitle("Publish", for: .normal)
         publishButton.setTitleColor(.white, for: .normal)
@@ -312,7 +324,6 @@ class CreatePostViewController: UIViewController {
         recipeTitleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         
         recipeContentView.addSubview(recipeTitleLabel)
-//        recipeContentView.backgroundColor = .red
         recipeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -337,12 +348,11 @@ class CreatePostViewController: UIViewController {
             recipeTitleTextView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
             recipeTitleTextView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
             recipeTitleTextView.heightAnchor.constraint(equalToConstant: 40),
-//            recipeTitleTextView.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
         ])
     }
     
     private func setupRecipeUploadImageLabel() {
-        recipeUploadImageLabel.text = "Show us what your food looks like!"
+        recipeUploadImageLabel.text = "Show us what your recipe looks like!"
         recipeUploadImageLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         
         recipeContentView.addSubview(recipeUploadImageLabel)
@@ -415,7 +425,6 @@ class CreatePostViewController: UIViewController {
             pickersStackView.topAnchor.constraint(equalTo: recipeUploadImageView.bottomAnchor, constant: 20),
             pickersStackView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
             pickersStackView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
-            pickersStackView.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20),
             pickersStackView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
@@ -504,6 +513,239 @@ class CreatePostViewController: UIViewController {
         pickersStackView.addArrangedSubview(ratingPickerStack)
     }
     
+    private func setupRecipeDescriptionLabel() {
+        recipeDescriptionLabel.text = "Tell us about your recipe!"
+        recipeDescriptionLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        recipeContentView.addSubview(recipeDescriptionLabel)
+        recipeDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeDescriptionLabel.topAnchor.constraint(equalTo: pickersStackView.bottomAnchor, constant: 20),
+            recipeDescriptionLabel.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeDescriptionLabel.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            
+        ])
+
+    }
+    
+    private func setupRecipeDescriptionTextView() {
+        recipeDescriptionTextView.layer.borderWidth = 1
+        recipeDescriptionTextView.layer.borderColor = UIColor.systemGray.cgColor
+        recipeDescriptionTextView.layer.cornerRadius = 10
+        recipeDescriptionTextView.font = .systemFont(ofSize: 16)
+        recipeDescriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        recipeContentView.addSubview(recipeDescriptionTextView)
+//        recipeContentView.backgroundColor = .red
+        recipeDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeDescriptionTextView.topAnchor.constraint(equalTo: recipeDescriptionLabel.bottomAnchor, constant: 10),
+            recipeDescriptionTextView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeDescriptionTextView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            recipeDescriptionTextView.heightAnchor.constraint(equalToConstant: 100),
+        ])
+    }
+    
+    private func setupIngredientsLabel() {
+        ingredientsLabel.text = "Ingredients"
+        ingredientsLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        recipeContentView.addSubview(ingredientsLabel)
+        ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            ingredientsLabel.topAnchor.constraint(equalTo: recipeDescriptionTextView.bottomAnchor, constant: 20),
+            ingredientsLabel.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            ingredientsLabel.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            
+        ])
+    }
+    
+    private func setupAddIngredientButton() {
+        addIngredientButton.setTitle("+", for: .normal)
+        addIngredientButton.setTitleColor(.white, for: .normal)
+        addIngredientButton.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        addIngredientButton.layer.cornerRadius = 25
+        addIngredientButton.layer.borderWidth = 1
+        addIngredientButton.layer.borderColor = UIColor.systemBlue.cgColor
+        addIngredientButton.backgroundColor = UIColor.systemBlue
+        
+        // Add target action
+//        addIngredientButton.addTarget(self, action: #selector(addIngredientTapped), for: .touchUpInside)
+        
+        // Add button to recipeContentView
+        recipeContentView.addSubview(addIngredientButton)
+        addIngredientButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Constraints for the button
+        NSLayoutConstraint.activate([
+            addIngredientButton.widthAnchor.constraint(equalToConstant: 50),
+            addIngredientButton.heightAnchor.constraint(equalToConstant: 50),
+            addIngredientButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            addIngredientButton.centerYAnchor.constraint(equalTo: ingredientsCollectionView.centerYAnchor, constant: -5)
+        ])
+    }
+    
+    private func setupIngredientsCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.itemSize = CGSize(width: 100, height: 120) // Adjust size as needed
+        ingredientsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        ingredientsCollectionView.backgroundColor = .clear
+        
+        recipeContentView.addSubview(ingredientsCollectionView)
+        ingredientsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Register custom cell
+        ingredientsCollectionView.register(IngredientViewCell.self, forCellWithReuseIdentifier: IngredientViewCell.reuse)
+        
+        // Set delegate and dataSource
+        ingredientsCollectionView.delegate = self
+        ingredientsCollectionView.dataSource = self
+        
+        // Constraints
+        NSLayoutConstraint.activate([
+            ingredientsCollectionView.topAnchor.constraint(equalTo: ingredientsLabel.bottomAnchor, constant: 10),
+            ingredientsCollectionView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 90),
+            ingredientsCollectionView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            ingredientsCollectionView.heightAnchor.constraint(equalToConstant: 120),
+        ])
+    }
+    
+    private func setupDirectionsLabel() {
+        directionsLabel.text = "Directions"
+        directionsLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        recipeContentView.addSubview(directionsLabel)
+        directionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            directionsLabel.topAnchor.constraint(equalTo: ingredientsCollectionView.bottomAnchor, constant: 20),
+            directionsLabel.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            directionsLabel.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupDirectionsSection() {
+        // Configure directions stack view
+        directionsStackView.axis = .vertical
+        directionsStackView.spacing = 20
+        directionsStackView.alignment = .fill
+        directionsStackView.distribution = .fillEqually
+        recipeContentView.addSubview(directionsStackView)
+        directionsStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add an initial direction
+        addDirectionField()
+        addDirectionField()
+        
+        // Add to recipeContentView
+        recipeContentView.addSubview(directionsStackView)
+        
+        NSLayoutConstraint.activate([
+            directionsStackView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 20),
+            directionsStackView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            directionsStackView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20)
+        ])
+        
+        // Configure Add Direction button
+        addDirectionButton.setTitle("+", for: .normal)
+        addDirectionButton.setTitleColor(.white, for: .normal)
+        addDirectionButton.backgroundColor = UIColor.systemGreen
+        addDirectionButton.layer.cornerRadius = 10
+        addDirectionButton.addTarget(self, action: #selector(addDirectionTapped), for: .touchUpInside)
+        recipeContentView.addSubview(addDirectionButton)
+        addDirectionButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            addDirectionButton.topAnchor.constraint(equalTo: directionsStackView.bottomAnchor, constant: 10),
+            addDirectionButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            addDirectionButton.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            addDirectionButton.heightAnchor.constraint(equalToConstant: 50),
+//            addDirectionButton.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
+        ])
+    }
+
+    // Add a new direction field to the stack view
+    @objc private func addDirectionTapped() {
+        addDirectionField()
+    }
+
+    private func addDirectionField() {
+        let directionIndex = directionsStackView.arrangedSubviews.count + 1
+        
+        // Create a container view for numbering and text field
+        let containerView = UIStackView()
+        containerView.axis = .horizontal
+        containerView.alignment = .center
+        containerView.spacing = 8
+        
+        // Create and configure the label for the direction number
+        let numberLabel = UILabel()
+        numberLabel.text = "\(directionIndex)."
+        numberLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        containerView.addArrangedSubview(numberLabel)
+        
+        NSLayoutConstraint.activate([
+            numberLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+        ])
+        
+        // Create and configure the text field for the direction
+        let directionTextView = UITextView()
+        directionTextView.layer.cornerRadius = 10
+        directionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        directionTextView.font = UIFont.systemFont(ofSize: 16)
+        containerView.addArrangedSubview(directionTextView)
+        
+        NSLayoutConstraint.activate([
+            directionTextView.topAnchor.constraint(equalTo: numberLabel.topAnchor),
+            directionTextView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+                
+        // Add the container view to the directions stack view
+        directionsStackView.addArrangedSubview(containerView)
+    }
+    
+    private func setupRecipePublishButton() {
+        recipePublishButton.layer.cornerRadius = 20
+        recipePublishButton.backgroundColor = .systemBlue
+        recipePublishButton.setTitle("Publish", for: .normal)
+        recipePublishButton.setTitleColor(.white, for: .normal)
+        recipePublishButton.setTitleColor(.systemGreen, for: .highlighted)
+        recipePublishButton.titleLabel?.font = .systemFont(ofSize: 16)
+        recipePublishButton.addTarget(self, action: #selector(createRecipe), for: .touchUpInside)
+        
+        recipePublishButton.translatesAutoresizingMaskIntoConstraints = false
+        recipeContentView.addSubview(recipePublishButton)
+        
+            NSLayoutConstraint.activate([
+                recipePublishButton.topAnchor.constraint(equalTo: addDirectionButton.bottomAnchor, constant: 20),
+                recipePublishButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+                recipePublishButton.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+                recipePublishButton.heightAnchor.constraint(equalToConstant: 50),
+                recipePublishButton.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
+            ])
+
+    }
+    
+    // MARK: Create Recipe
+    
+    @objc private func createRecipe() {
+        let userId = "cdc236"
+        let caption = captionTextView.text ?? ""
+        
+        // TODO: upload image to backend server, then get back URL
+        let imageUrl = "placeholder"
+        
+        NetworkManager.shared.createStory(userId: userId, caption: caption, imageUrl: imageUrl) {
+            post in
+            // Do something
+        }
+        
+    }
     
     // MARK: Event ScrollView
     
@@ -563,16 +805,6 @@ extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigatio
         }
         return nil
     }
-
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        if pickerView == timePicker {
-//            timePickerTextField.text = timeOptions[row]
-//        } else if pickerView == servingsPicker {
-//            servingsPickerTextField.text = servingsOptions[row]
-//        } else if pickerView == ratingPicker {
-//            ratingPickerTextField.text = ratingOptions[row]
-//        }
-//    }
 }
 
 extension CreatePostViewController: UIPickerViewDelegate {
@@ -606,5 +838,21 @@ extension CreatePostViewController: UIPickerViewDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
+    }
+}
+
+// MARK: UICollectionViewDelegate, UICollectionViewDataSource
+
+extension CreatePostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return ingredients.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
+        let ingredient = ingredients[indexPath.row]
+        // TODO: dummy data
+        cell.configure(ingredient: ingredient)
+        return cell
     }
 }

@@ -21,9 +21,9 @@ class HomescreenViewController: UIViewController {
    
     
     // MARK: - Properties (data)
-    private var recipePosts: [RecipePost] = [
-        RecipePost(username: "emily12345", caption: "made this over the weekened and it was very good", imageURL: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8368708.jpg&q=60&c=sc&orient=true&poi=auto&h=512", time: Date()),
-        RecipePost(username: "john2134", caption: "delicious meal can't complain", imageURL: "https://www.allrecipes.com/thmb/cLLmeWO7j9YYI66vL3eZzUL_NKQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/7501402crockpot-italian-chicken-recipe-fabeveryday4x3-223051c7188841cb8fd7189958c62f3d.jpg", time: Date())
+    private var recipePosts: [Recipe] = [
+//        Recipe(userId: "emily12345", description: "made this over the weekened and it was very good", imageUrl: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8368708.jpg&q=60&c=sc&orient=true&poi=auto&h=512", time: Date()),
+//        Recipe(userId: "john2134", description: "delicious meal can't complain", imageUrl: "https://www.allrecipes.com/thmb/cLLmeWO7j9YYI66vL3eZzUL_NKQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/7501402crockpot-italian-chicken-recipe-fabeveryday4x3-223051c7188841cb8fd7189958c62f3d.jpg", time: Date())
     ]
     
     private var socialPosts: [SocialEventPost] = [

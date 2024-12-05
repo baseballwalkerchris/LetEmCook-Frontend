@@ -42,20 +42,20 @@ class ReceipeViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure cell function
-    func recipeConfigure(recipePost: RecipePost){
+    func recipeConfigure(recipePost: Recipe){
         //setupimage
-        let recipeImageUrl = URL(string: recipePost.imageURL)
+        let recipeImageUrl = URL(string: recipePost.imageUrl)
         foodImage.sd_setImage(with: recipeImageUrl)
         //foodImage.image = UIImage(named: recipePost.imageURL)
-        username.text = recipePost.username
+        username.text = recipePost.userId
         //caption.text = recipePost.caption
-        timePassedSincePosted.text = recipePost.time.convertToAgo()
+        timePassedSincePosted.text = recipePost.createdAt.convertToAgo()
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = CGFloat(recipePost.username.count * 8)
+        paragraphStyle.firstLineHeadIndent = CGFloat(recipePost.userId.count * 8)
         paragraphStyle.headIndent = 0// First line stays aligned with the username// Indentation for subsequent lines
         
         let attributedCaption = NSAttributedString(
-            string: recipePost.caption,
+            string: recipePost.description,
             attributes: [
                 .font: UIFont.systemFont(ofSize: 14, weight: .light).rounded,
                 .foregroundColor: UIColor.a4.black,
