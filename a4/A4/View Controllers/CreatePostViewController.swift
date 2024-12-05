@@ -7,21 +7,54 @@
 
 import UIKit
 
-class CreatePostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreatePostViewController: UIViewController {
     
     // MARK: - Properties (view)
     let segmentedControl = UISegmentedControl(items: ["Story", "Recipe", "Event"])
+    
+    // Properties for stories
     let storyScrollView = UIScrollView()
     let storyContentView = UIView()
-    let uploadImageLabel = UILabel()
-    let uploadImageView = UIView()
-    let uploadImageButton = UIButton()
-    let selectedImageView = UIImageView()
+    let storyUploadImageLabel = UILabel()
+    let storyUploadImageView = UIView()
+    let storyUploadImageButton = UIButton()
+    let storySelectedImageView = UIImageView()
     let captionLabel = UILabel()
     let captionTextView = UITextView()
     let publishButton = UIButton()
+    
+    // Properties for recipes
     let recipeScrollView = UIScrollView()
+    let recipeContentView = UIView()
+    let recipeTitleLabel = UILabel()
+    let recipeTitleTextView = UITextView()
+    let recipeUploadImageLabel = UILabel()
+    let recipeUploadImageView = UIView()
+    let recipeUploadImageButton = UIButton()
+    let recipeSelectedImageView = UIImageView()
+    let pickersStackView = UIStackView()
+    let timePicker = UIPickerView()
+    let servingsPicker = UIPickerView()
+    let ratingPicker = UIPickerView()
+    let recipeDescriptionTextView = UITextView()
+    
+    let ingredientsLabel = UILabel()
+//    let ingredientsCollectionView: UICollectionView
+    let addIngredientButton = UIButton()
+    
+    let directionsLabel = UILabel()
+    let directionsStackView = UIStackView()
+    let addDirectionButton = UIButton()
+//    let publishButton = UIButton()
+
+    // Properties for events
     let eventScrollView = UIScrollView()
+    
+    // MARK: properties (data)
+    // Data for pickers
+    let timeOptions = ["5 min", "10 min", "15 min", "30 min", "1 hour", "2 hours"]
+    let servingsOptions = ["1 person", "2 people", "4 people", "6 people", "8+ people"]
+    let ratingOptions = ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"]
     
     // MARK: - Lifecycle
     
@@ -32,16 +65,34 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         view.backgroundColor = .systemBackground
         
         setupSegmentedControl()
+        
+        // Story views
         setupStoryScrollView()
         setupStoryContentView()
-        setupUploadImageLabel()
-        setupUploadImageView()
-        setupUploadImageButton()
-        setupSelectedImageView()
+        setupStoryUploadImageLabel()
+        setupStoryUploadImageView()
+        setupStoryUploadImageButton()
+        setupStorySelectedImageView()
         setupCaptionLabel()
         setupCaptionTextView()
         setupPublishButton()
+        
+        // Recipe views
         setupRecipeScrollView()
+        setupRecipeContentView()
+        setupRecipeTitleLabel()
+        setupRecipeTitleTextView()
+        setupRecipeUploadImageLabel()
+        setupRecipeUploadImageView()
+        setupRecipeUploadImageButton()
+        setupRecipeSelectedImageView()
+        setupPickersStackView()
+        setupTimePicker()
+        setupServingsPicker()
+        setupRatingsPicker()
+
+
+        // Event views
         setupEventScrollView()
         
         segmentChanged(segmentedControl) // Show initial view
@@ -97,78 +148,78 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         ])
     }
     
-    private func setupUploadImageLabel() {
-        uploadImageLabel.text = "Image"
-        uploadImageLabel.font = .systemFont(ofSize: 24, weight: .semibold)
+    private func setupStoryUploadImageLabel() {
+        storyUploadImageLabel.text = "Shows us what your food looks like!"
+        storyUploadImageLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         
-        storyContentView.addSubview(uploadImageLabel)
-        uploadImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        storyContentView.addSubview(storyUploadImageLabel)
+        storyUploadImageLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            uploadImageLabel.topAnchor.constraint(equalTo: storyContentView.topAnchor, constant: 10),
-            uploadImageLabel.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
-            uploadImageLabel.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20)
+            storyUploadImageLabel.topAnchor.constraint(equalTo: storyContentView.topAnchor, constant: 10),
+            storyUploadImageLabel.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
+            storyUploadImageLabel.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20)
         ])
     }
     
-    private func setupUploadImageView() {
-        uploadImageView.layer.borderWidth = 1
-        uploadImageView.layer.borderColor = UIColor.systemGray.cgColor
-        uploadImageView.layer.cornerRadius = 10
-        uploadImageView.layer.masksToBounds = true
-        uploadImageView.backgroundColor = .systemGray6
+    private func setupStoryUploadImageView() {
+        storyUploadImageView.layer.borderWidth = 1
+        storyUploadImageView.layer.borderColor = UIColor.systemGray.cgColor
+        storyUploadImageView.layer.cornerRadius = 10
+        storyUploadImageView.layer.masksToBounds = true
+        storyUploadImageView.backgroundColor = .systemGray6
         
-        storyContentView.addSubview(uploadImageView)
-        uploadImageView.translatesAutoresizingMaskIntoConstraints = false
+        storyContentView.addSubview(storyUploadImageView)
+        storyUploadImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            uploadImageView.topAnchor.constraint(equalTo: storyContentView.topAnchor, constant: 50),
-            uploadImageView.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
-            uploadImageView.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
-            uploadImageView.heightAnchor.constraint(equalToConstant: 150),
+            storyUploadImageView.topAnchor.constraint(equalTo: storyContentView.topAnchor, constant: 50),
+            storyUploadImageView.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
+            storyUploadImageView.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
+            storyUploadImageView.heightAnchor.constraint(equalToConstant: 150),
         ])
     }
     
-    private func setupSelectedImageView() {
-        selectedImageView.contentMode = .scaleAspectFit
-        selectedImageView.clipsToBounds = true
+    private func setupStorySelectedImageView() {
+        storySelectedImageView.contentMode = .scaleAspectFit
+        storySelectedImageView.clipsToBounds = true
         
-        uploadImageView.addSubview(selectedImageView)
-        selectedImageView.translatesAutoresizingMaskIntoConstraints = false
+        storyUploadImageView.addSubview(storySelectedImageView)
+        storySelectedImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            selectedImageView.topAnchor.constraint(equalTo: uploadImageView.topAnchor, constant: 10),
-            selectedImageView.leadingAnchor.constraint(equalTo: uploadImageView.leadingAnchor, constant: 10),
-            selectedImageView.trailingAnchor.constraint(equalTo: uploadImageView.trailingAnchor, constant: -10),
-            selectedImageView.bottomAnchor.constraint(equalTo: uploadImageButton.topAnchor, constant: -10),
+            storySelectedImageView.topAnchor.constraint(equalTo: storyUploadImageView.topAnchor, constant: 10),
+            storySelectedImageView.leadingAnchor.constraint(equalTo: storyUploadImageView.leadingAnchor, constant: 10),
+            storySelectedImageView.trailingAnchor.constraint(equalTo: storyUploadImageView.trailingAnchor, constant: -10),
+            storySelectedImageView.bottomAnchor.constraint(equalTo: storyUploadImageButton.topAnchor, constant: -10),
         ])
     }
     
-    private func setupUploadImageButton() {
-        uploadImageButton.setTitle("Upload Image", for: .normal)
-        uploadImageButton.setTitleColor(.systemBlue, for: .normal)
-        uploadImageButton.addTarget(self, action: #selector(uploadImageTapped), for: .touchUpInside)
+    private func setupStoryUploadImageButton() {
+        storyUploadImageButton.setTitle("Upload Image", for: .normal)
+        storyUploadImageButton.setTitleColor(.systemBlue, for: .normal)
+        storyUploadImageButton.addTarget(self, action: #selector(uploadImageTapped), for: .touchUpInside)
         
-        uploadImageView.addSubview(uploadImageButton)
-        uploadImageButton.translatesAutoresizingMaskIntoConstraints = false
+        storyUploadImageView.addSubview(storyUploadImageButton)
+        storyUploadImageButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            uploadImageButton.bottomAnchor.constraint(equalTo: uploadImageView.bottomAnchor, constant: -10),
-            uploadImageButton.centerXAnchor.constraint(equalTo: uploadImageView.centerXAnchor)
+            storyUploadImageButton.bottomAnchor.constraint(equalTo: storyUploadImageView.bottomAnchor, constant: -10),
+            storyUploadImageButton.centerXAnchor.constraint(equalTo: storyUploadImageView.centerXAnchor)
         ])
         
     }
     
     private func setupCaptionLabel() {
         captionLabel.text = "Tell us about your food!"
-        captionLabel.font = .systemFont(ofSize: 24, weight: .semibold)
+        captionLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         
         storyContentView.addSubview(captionLabel)
         captionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            captionLabel.topAnchor.constraint(equalTo: uploadImageView.bottomAnchor, constant: 40),
-            captionLabel.leadingAnchor.constraint(equalTo: uploadImageView.leadingAnchor)
+            captionLabel.topAnchor.constraint(equalTo: storyUploadImageView.bottomAnchor, constant: 40),
+            captionLabel.leadingAnchor.constraint(equalTo: storyUploadImageView.leadingAnchor)
         ])
     }
     
@@ -243,6 +294,217 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         ])
     }
     
+    private func setupRecipeContentView() {
+        recipeScrollView.addSubview(recipeContentView)
+        recipeContentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeContentView.topAnchor.constraint(equalTo: recipeScrollView.topAnchor),
+            recipeContentView.leadingAnchor.constraint(equalTo: recipeScrollView.leadingAnchor),
+            recipeContentView.trailingAnchor.constraint(equalTo: recipeScrollView.trailingAnchor),
+            recipeContentView.bottomAnchor.constraint(equalTo: recipeScrollView.bottomAnchor),
+            recipeContentView.widthAnchor.constraint(equalTo: recipeScrollView.widthAnchor)
+        ])
+    }
+    
+    private func setupRecipeTitleLabel() {
+        recipeTitleLabel.text = "Title"
+        recipeTitleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        recipeContentView.addSubview(recipeTitleLabel)
+//        recipeContentView.backgroundColor = .red
+        recipeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeTitleLabel.topAnchor.constraint(equalTo: recipeContentView.topAnchor, constant: 10),
+            recipeTitleLabel.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeTitleLabel.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupRecipeTitleTextView() {
+        recipeTitleTextView.layer.borderWidth = 1
+        recipeTitleTextView.layer.borderColor = UIColor.systemGray.cgColor
+        recipeTitleTextView.layer.cornerRadius = 10
+        recipeTitleTextView.font = .systemFont(ofSize: 16)
+        recipeTitleTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        recipeContentView.addSubview(recipeTitleTextView)
+        recipeTitleTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeTitleTextView.topAnchor.constraint(equalTo: recipeTitleLabel.bottomAnchor, constant: 10),
+            recipeTitleTextView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeTitleTextView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            recipeTitleTextView.heightAnchor.constraint(equalToConstant: 40),
+//            recipeTitleTextView.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupRecipeUploadImageLabel() {
+        recipeUploadImageLabel.text = "Show us what your food looks like!"
+        recipeUploadImageLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        recipeContentView.addSubview(recipeUploadImageLabel)
+        recipeUploadImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeUploadImageLabel.topAnchor.constraint(equalTo: recipeTitleTextView.bottomAnchor, constant: 20),
+            recipeUploadImageLabel.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeUploadImageLabel.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupRecipeUploadImageView() {
+        recipeUploadImageView.layer.borderWidth = 1
+        recipeUploadImageView.layer.borderColor = UIColor.systemGray.cgColor
+        recipeUploadImageView.layer.cornerRadius = 10
+        recipeUploadImageView.layer.masksToBounds = true
+        recipeUploadImageView.backgroundColor = .systemGray6
+        
+        recipeContentView.addSubview(recipeUploadImageView)
+        recipeUploadImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeUploadImageView.topAnchor.constraint(equalTo: recipeUploadImageLabel.bottomAnchor, constant: 10),
+            recipeUploadImageView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipeUploadImageView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            recipeUploadImageView.heightAnchor.constraint(equalToConstant: 150),
+        ])
+    }
+    
+    private func setupRecipeUploadImageButton() {
+        recipeUploadImageButton.setTitle("Upload Image", for: .normal)
+        recipeUploadImageButton.setTitleColor(.systemBlue, for: .normal)
+        recipeUploadImageButton.addTarget(self, action: #selector(uploadImageTapped), for: .touchUpInside)
+        
+        recipeUploadImageView.addSubview(recipeUploadImageButton)
+        recipeUploadImageButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeUploadImageButton.bottomAnchor.constraint(equalTo: recipeUploadImageView.bottomAnchor, constant: -10),
+            recipeUploadImageButton.centerXAnchor.constraint(equalTo: recipeUploadImageView.centerXAnchor)
+        ])
+
+    }
+    
+    private func setupRecipeSelectedImageView() {
+        recipeSelectedImageView.contentMode = .scaleAspectFit
+        recipeSelectedImageView.clipsToBounds = true
+        
+        recipeUploadImageView.addSubview(recipeSelectedImageView)
+        recipeSelectedImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            recipeSelectedImageView.topAnchor.constraint(equalTo: recipeUploadImageView.topAnchor, constant: 10),
+            recipeSelectedImageView.leadingAnchor.constraint(equalTo: recipeUploadImageView.leadingAnchor, constant: 10),
+            recipeSelectedImageView.trailingAnchor.constraint(equalTo: recipeUploadImageView.trailingAnchor, constant: -10),
+            recipeSelectedImageView.bottomAnchor.constraint(equalTo: recipeUploadImageButton.topAnchor, constant: -10),
+        ])
+    }
+    
+    private func setupPickersStackView() {
+        pickersStackView.axis = .horizontal
+        pickersStackView.distribution = .fillEqually
+        pickersStackView.spacing = 10
+        
+        recipeContentView.addSubview(pickersStackView)
+        pickersStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            pickersStackView.topAnchor.constraint(equalTo: recipeUploadImageView.bottomAnchor, constant: 20),
+            pickersStackView.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            pickersStackView.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            pickersStackView.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20),
+            pickersStackView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+    
+    private func setupTimePicker() {
+        // Create stack for time picker
+        let timePickerStack = UIStackView()
+        timePickerStack.axis = .vertical
+        timePickerStack.spacing = 4
+        timePickerStack.alignment = .fill
+
+        // Label for time picker
+        let timePickerLabel = UILabel()
+        timePickerLabel.text = "Time"
+        timePickerLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        timePickerLabel.textAlignment = .center
+
+        // Configure time picker
+        timePicker.layer.borderWidth = 0.5
+        timePicker.layer.cornerRadius = 8
+        timePicker.backgroundColor = .white
+        timePicker.delegate = self
+        timePicker.dataSource = self
+
+        // Add label and picker to stack
+        timePickerStack.addArrangedSubview(timePickerLabel)
+        timePickerStack.addArrangedSubview(timePicker)
+
+        // Add to main pickers stack view
+        pickersStackView.addArrangedSubview(timePickerStack)
+    }
+
+    private func setupServingsPicker() {
+        // Create stack for servings picker
+        let servingsPickerStack = UIStackView()
+        servingsPickerStack.axis = .vertical
+        servingsPickerStack.spacing = 4
+        servingsPickerStack.alignment = .fill
+
+        // Label for servings picker
+        let servingsPickerLabel = UILabel()
+        servingsPickerLabel.text = "Servings"
+        servingsPickerLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        servingsPickerLabel.textAlignment = .center
+
+        // Configure servings picker
+        servingsPicker.layer.borderWidth = 0.5
+        servingsPicker.layer.cornerRadius = 8
+        servingsPicker.backgroundColor = .white
+        servingsPicker.delegate = self
+        servingsPicker.dataSource = self
+
+        // Add label and picker to stack
+        servingsPickerStack.addArrangedSubview(servingsPickerLabel)
+        servingsPickerStack.addArrangedSubview(servingsPicker)
+
+        // Add to main pickers stack view
+        pickersStackView.addArrangedSubview(servingsPickerStack)
+    }
+
+    private func setupRatingsPicker() {
+        // Create stack for ratings picker
+        let ratingPickerStack = UIStackView()
+        ratingPickerStack.axis = .vertical
+        ratingPickerStack.spacing = 4
+        ratingPickerStack.alignment = .fill
+
+        // Label for ratings picker
+        let ratingPickerLabel = UILabel()
+        ratingPickerLabel.text = "Rating"
+        ratingPickerLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        ratingPickerLabel.textAlignment = .center
+
+        // Configure ratings picker
+        ratingPicker.layer.borderWidth = 0.5
+        ratingPicker.layer.cornerRadius = 8
+        ratingPicker.backgroundColor = .white
+        ratingPicker.delegate = self
+        ratingPicker.dataSource = self
+
+        // Add label and picker to stack
+        ratingPickerStack.addArrangedSubview(ratingPickerLabel)
+        ratingPickerStack.addArrangedSubview(ratingPicker)
+
+        // Add to main pickers stack view
+        pickersStackView.addArrangedSubview(ratingPickerStack)
+    }
+    
+    
     // MARK: Event ScrollView
     
     private func setupEventScrollView() {
@@ -272,31 +534,77 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
           actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
           
           present(actionSheet, animated: true)
-      }
-      
-      private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
-          guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
-              print("Source type not available")
-              return
-          }
-          
-          let imagePicker = UIImagePickerController()
-          imagePicker.delegate = self
-          imagePicker.sourceType = sourceType
-          present(imagePicker, animated: true)
-      }
-      
-      // MARK: - UIImagePickerControllerDelegate
-      
-      func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-          if let selectedImage = info[.originalImage] as? UIImage {
-              selectedImageView.image = selectedImage
-          }
-          picker.dismiss(animated: true)
-      }
-      
-      func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-          picker.dismiss(animated: true)
-      }
+    }
 }
 
+extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDataSource, UITextFieldDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1 // Single column in each picker
+        }
+        
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if pickerView == timePicker {
+            return timeOptions.count
+        } else if pickerView == servingsPicker {
+            return servingsOptions.count
+        } else if pickerView == ratingPicker {
+            return ratingOptions.count
+        }
+        return 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if pickerView == timePicker {
+            return timeOptions[row]
+        } else if pickerView == servingsPicker {
+            return servingsOptions[row]
+        } else if pickerView == ratingPicker {
+            return ratingOptions[row]
+        }
+        return nil
+    }
+
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        if pickerView == timePicker {
+//            timePickerTextField.text = timeOptions[row]
+//        } else if pickerView == servingsPicker {
+//            servingsPickerTextField.text = servingsOptions[row]
+//        } else if pickerView == ratingPicker {
+//            ratingPickerTextField.text = ratingOptions[row]
+//        }
+//    }
+}
+
+extension CreatePostViewController: UIPickerViewDelegate {
+    private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
+            print("Source type not available")
+            return
+        }
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = sourceType
+        present(imagePicker, animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                storySelectedImageView.image = selectedImage
+            case 1:
+                recipeSelectedImageView.image = selectedImage
+            case 2:
+                break
+            default:
+                break
+            }
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+}
