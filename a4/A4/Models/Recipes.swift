@@ -8,11 +8,16 @@
 //MARK: conform with backend, temp data for now
 import Foundation
 
-struct RecipePost: Codable {
-    // TODO: Create a Post Struct here
-    let username: String
-    let caption: String
-    //let message: String
-    let imageURL: String
-    let time: Date
+struct Recipe: Codable {
+    let id: Int
+    let userId: String
+    let title: String
+    let imageUrl: String
+    let time: Int
+    let servings: Int
+    let ratings: Int
+    let description: String
+    let ingredients: [Ingredient]
+    let directions: [String]
+    let createdAt: Date
 }
