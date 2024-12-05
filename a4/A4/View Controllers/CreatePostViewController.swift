@@ -735,16 +735,44 @@ class CreatePostViewController: UIViewController {
     
     @objc private func createRecipe() {
         let userId = "cdc236"
-        let caption = captionTextView.text ?? ""
+        let title = recipeTitleTextView.text ?? ""
+        let imageUrl = "placeholder"
+        let time = String(timePicker.selectedRow(inComponent: 0))
+        let servings = String(servingsPicker.selectedRow(inComponent: 0))
+        let ratings = String(ratingPicker.selectedRow(inComponent: 0))
+        let description = recipeDescriptionTextView.text ?? ""
+        let ingredients = ingredients
+        let directions = collectDirections()
         
         // TODO: upload image to backend server, then get back URL
-        let imageUrl = "placeholder"
         
-        NetworkManager.shared.createStory(userId: userId, caption: caption, imageUrl: imageUrl) {
+        NetworkManager.shared.createRecipe(userId: userId, title: title, imageUrl: imageUrl, time: time, servings: servings,
+                                          ratings: ratings, description: description, ingredients: ingredients, directions: directions) {
             post in
             // Do something
         }
         
+    }
+    
+    private func collectDirections() -> [Direction] {
+        var directions: [Direction] = []
+        
+        for (index, view) in directionsStackView.arrangedSubviews.enumerated() {
+            if let containerView = view as? UIStackView {
+                if let textField = containerView.arrangedSubviews.compactMap({ $0 as? UITextField }).first,
+                   let directionText = textField.text, !directionText.isEmpty {
+                    let direction = Direction(
+                        stepNumber: index + 1,
+                        title: "Step \(index + 1)",
+                        description: directionText,
+                        isCompleted: false // Default to false
+                    )
+                    directions.append(direction)
+                }
+            }
+        }
+        
+        return directions
     }
     
     // MARK: Event ScrollView

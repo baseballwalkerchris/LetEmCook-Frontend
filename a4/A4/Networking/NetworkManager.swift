@@ -65,17 +65,17 @@ class NetworkManager {
             .responseDecodable(of: [Story].self, decoder: decoder) { response in
                 // Handle the response
                 switch response.result {
-                case .success(let posts):
-                    print("Successfully fetched \(posts.count) posts")
-                    completion(posts)
+                case .success(let stories):
+                    print("Successfully fetched \(stories.count) posts")
+                    completion(stories)
                 case .failure(let error):
-                    print("Error in NetworkManager.fetchRoster: \(error.localizedDescription)")
+                    print("Error in NetworkManager.fetchPosts: \(error.localizedDescription)")
                 }
             }
     }
         
     func createRecipe(
-        userId: String, title: String, imageUrl: String, time: Int, servings: Int, ratings: Int, description: String,
+        userId: String, title: String, imageUrl: String, time: String, servings: String, ratings: String, description: String,
         ingredients: [Ingredient], directions: [Direction], completion: @escaping (Recipe) -> Void) {
             
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -94,18 +94,42 @@ class NetworkManager {
             "ingredients": ingredients,
             "directions": directions
         ]
+            
+        print(parameters)
         
+
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
-            .responseDecodable(of: StoryResponse.self, decoder: decoder) { response in
+            .responseDecodable(of: Recipe.self, decoder: decoder) { response in
                 switch response.result {
-                case .success(let storyResponse):
-                    print("Successfully added recipe with ID: \(storyResponse.data.id)")
-                    print(storyResponse.data)
-                    completion(storyResponse.data)
+                case .success(let recipe):
+                    print("Successfully added recipe with ID: \(recipe.id)")
+                    completion(recipe)
                 case .failure(let error):
                     print("Error in NetworkManager.createRecipe: \(error.localizedDescription)")
                     print("No response data")
+                }
+            }
+    }
+    
+    func fetchRecipes(completion: @escaping ([Recipe]) -> Void) {
+        // Specify the endpoint
+        let endpoint = ""
+        
+        decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        // Create the request
+        AF.request(endpoint, method: .get)
+            .validate()
+            .responseDecodable(of: [Recipe].self, decoder: decoder) { response in
+                // Handle the response
+                switch response.result {
+                case .success(let recipes):
+                    print("Successfully fetched \(recipes.count) posts")
+                    completion(recipes)
+                case .failure(let error):
+                    print("Error in NetworkManager.fetchRecipes: \(error.localizedDescription)")
                 }
             }
     }

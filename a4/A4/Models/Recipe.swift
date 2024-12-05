@@ -13,9 +13,9 @@ struct Recipe: Codable {
     let userId: String
     let title: String
     let imageUrl: String
-    let time: Int
-    let servings: Int
-    let ratings: Int
+    let time: String
+    let servings: String
+    let ratings: String
     let description: String
     let ingredients: [Ingredient]
     let directions: [String]
