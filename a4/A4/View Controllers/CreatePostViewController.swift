@@ -16,9 +16,10 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
     let uploadImageLabel = UILabel()
     let uploadImageView = UIView()
     let uploadImageButton = UIButton()
-    let selectedImageView = UIImageView() // To display the selected image
+    let selectedImageView = UIImageView()
+    let captionLabel = UILabel()
+    let captionTextView = UITextView()
     let publishButton = UIButton()
-    let descriptionTextView = UITextView()
     let recipeScrollView = UIScrollView()
     let eventScrollView = UIScrollView()
     
@@ -37,7 +38,8 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         setupUploadImageView()
         setupUploadImageButton()
         setupSelectedImageView()
-        setupDescriptionTextView()
+        setupCaptionLabel()
+        setupCaptionTextView()
         setupPublishButton()
         setupRecipeScrollView()
         setupEventScrollView()
@@ -157,22 +159,34 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         
     }
     
-    private func setupDescriptionTextView() {
-        descriptionTextView.layer.borderWidth = 1
-        descriptionTextView.layer.borderColor = UIColor.systemGray.cgColor
-        descriptionTextView.layer.cornerRadius = 10
-        descriptionTextView.font = .systemFont(ofSize: 16)
-        descriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private func setupCaptionLabel() {
+        captionLabel.text = "Tell us about your food!"
+        captionLabel.font = .systemFont(ofSize: 24, weight: .semibold)
         
-        storyContentView.addSubview(descriptionTextView)
-        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        storyContentView.addSubview(captionLabel)
+        captionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            descriptionTextView.topAnchor.constraint(equalTo: uploadImageView.bottomAnchor, constant: 20),
-            descriptionTextView.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
-            descriptionTextView.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: 150),
-            descriptionTextView.bottomAnchor.constraint(equalTo: storyContentView.bottomAnchor, constant: -20)
+            captionLabel.topAnchor.constraint(equalTo: uploadImageView.bottomAnchor, constant: 40),
+            captionLabel.leadingAnchor.constraint(equalTo: uploadImageView.leadingAnchor)
+        ])
+    }
+    
+    private func setupCaptionTextView() {
+        captionTextView.layer.borderWidth = 1
+        captionTextView.layer.borderColor = UIColor.systemGray.cgColor
+        captionTextView.layer.cornerRadius = 10
+        captionTextView.font = .systemFont(ofSize: 16)
+        captionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        storyContentView.addSubview(captionTextView)
+        captionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            captionTextView.topAnchor.constraint(equalTo: captionLabel.bottomAnchor, constant: 10),
+            captionTextView.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
+            captionTextView.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
+            captionTextView.heightAnchor.constraint(equalToConstant: 150),
         ])
     }
     
@@ -183,17 +197,35 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         publishButton.setTitleColor(.white, for: .normal)
         publishButton.setTitleColor(.systemGreen, for: .highlighted)
         publishButton.titleLabel?.font = .systemFont(ofSize: 16)
-//        publishButton.addTarget(self, action: #selector(publishButtonTapped), for: .touchUpInside
+        publishButton.addTarget(self, action: #selector(createStory), for: .touchUpInside)
         
         publishButton.translatesAutoresizingMaskIntoConstraints = false
         storyContentView.addSubview(publishButton)
         
-        NSLayoutConstraint.activate([
-            publishButton.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 20),
-            publishButton.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
-            publishButton.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
-            publishButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
+            NSLayoutConstraint.activate([
+                publishButton.topAnchor.constraint(equalTo: captionTextView.bottomAnchor, constant: 40),
+                publishButton.leadingAnchor.constraint(equalTo: storyContentView.leadingAnchor, constant: 20),
+                publishButton.trailingAnchor.constraint(equalTo: storyContentView.trailingAnchor, constant: -20),
+                publishButton.heightAnchor.constraint(equalToConstant: 50),
+                publishButton.bottomAnchor.constraint(equalTo: storyContentView.bottomAnchor, constant: -20)
+            ])
+
+    }
+    
+    // MARK: createStory
+    
+    @objc private func createStory() {
+        let userId = "cdc236"
+        let caption = captionTextView.text ?? ""
+        
+        // TODO: upload image to backend server, then get back URL
+        let imageUrl = "placeholder"
+        
+        NetworkManager.shared.createStory(userId: userId, caption: caption, imageUrl: imageUrl) {
+            post in
+            // Do something
+        }
+        
     }
     
     // MARK: Recipe ScrollView

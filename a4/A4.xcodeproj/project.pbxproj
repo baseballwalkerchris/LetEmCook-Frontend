@@ -36,6 +36,7 @@
 		2587A0FA2CF4EAF8001ABCBE /* View Controllers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "View Controllers"; sourceTree = "<group>"; };
 		2587A0FC2CF4EBB3001ABCBE /* ViewCells */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewCells; sourceTree = "<group>"; };
 		2587A0FD2CF4EC94001ABCBE /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+		9728946E2D010AD4008D4C3C /* Networking */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Networking; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +83,7 @@
 		2ED700562AF1CF5600B7C687 /* A4 */ = {
 			isa = PBXGroup;
 			children = (
+				9728946E2D010AD4008D4C3C /* Networking */,
 				2587A0FD2CF4EC94001ABCBE /* Models */,
 				2587A0FC2CF4EBB3001ABCBE /* ViewCells */,
 				2E07F6132AF1D04700395214 /* Extensions */,
@@ -114,6 +116,7 @@
 				2587A0FA2CF4EAF8001ABCBE /* View Controllers */,
 				2587A0FC2CF4EBB3001ABCBE /* ViewCells */,
 				2587A0FD2CF4EC94001ABCBE /* Models */,
+				9728946E2D010AD4008D4C3C /* Networking */,
 			);
 			name = A4;
 			packageProductDependencies = (
