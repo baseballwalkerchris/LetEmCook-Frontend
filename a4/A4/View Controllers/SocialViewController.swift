@@ -94,7 +94,7 @@ class SocialEventViewController: UIViewController {
     
     // MARK: init
     
-    init(socialPost: SocialEventPost) {
+    init(event: Event) {
 //        let eventName: String
 //        let author: String
 //        let maxCount: Int
@@ -103,13 +103,13 @@ class SocialEventViewController: UIViewController {
 //        let descriptionOfEvent: String
 //        let currentAttendees: Int
 //        let imageURL: String
-        let recipeImageUrl = URL(string: socialPost.imageURL)
+        let recipeImageUrl = URL(string: event.imageUrl)
         foodImage.sd_setImage(with: recipeImageUrl)
-        eventName.text = socialPost.eventName
-        author.text = "By \(socialPost.author)"
-        dayText.text = socialPost.date
-        locationText.text = socialPost.location
-        detailsText.text = socialPost.descriptionOfEvent
+        eventName.text = event.title
+        author.text = "By \(event.userId)"
+        dayText.text = "placeholder"
+        locationText.text = event.location
+        detailsText.text = event.caption
         super.init(nibName: nil, bundle: nil)
     }
     

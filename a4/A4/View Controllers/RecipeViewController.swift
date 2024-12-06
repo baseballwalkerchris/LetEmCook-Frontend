@@ -44,9 +44,9 @@ class RecipeViewController: UIViewController {
     ]
     
     private var directions: [Direction] = [
-        Direction(stepNumber: 1, title: "Add ingredients", description: "Add milk, boba, black tea, syrup, and green tea to a blender.", isCompleted: true),
-        Direction(stepNumber: 2, title: "Blend", description: "Blend until smooth.", isCompleted: false),
-        Direction(stepNumber: 3, title: "Strain", description: "Strain into a glass.", isCompleted: false),
+        Direction(stepNumber: 1, description: "Add milk, boba, black tea, syrup, and green tea to a blender.", isCompleted: true),
+        Direction(stepNumber: 2, description: "Blend until smooth.", isCompleted: false),
+        Direction(stepNumber: 3, description: "Strain into a glass.", isCompleted: false),
     ]
     
     
@@ -306,27 +306,6 @@ class RecipeViewController: UIViewController {
         ])
     }
     
-//    private func setupDirectionsTableView() {
-//        directionsTableView.register(DirectionTableViewCell.self, forCellReuseIdentifier: DirectionTableViewCell.reuse)
-//        
-//        directionsTableView.delegate = self
-//        directionsTableView.dataSource = self
-//        directionsTableView.backgroundColor = UIColor.a4.offWhite
-//
-//        
-//        contentView.addSubview(directionsTableView)
-//        directionsTableView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            directionsTableView.topAnchor.constraint(equalTo: directionsLabel.bottomAnchor, constant: 8),
-//            directionsTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-//            directionsTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-//            directionsTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-//            directionsTableView.heightAnchor.constraint(equalToConstant: 200)
-//        ])
-//    }
-//    
-    
     private func setupDirectionsTableView() {
         directionsTableView.register(DirectionTableViewCell.self, forCellReuseIdentifier: DirectionTableViewCell.reuse)
         
@@ -392,9 +371,9 @@ extension RecipeViewController: UICollectionViewDataSource, UICollectionViewDele
      
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
-            let image = ingredientImages[indexPath.item]
-            let text = ingredients[indexPath.item]
-            cell.configure(with: image, text: text)
+        
+            // TODO: dummy data
+        cell.configure(ingredient: Ingredient(id: 0, name: "test", imageUrl: "test"))
             return cell
     }
 }
@@ -436,7 +415,7 @@ extension RecipeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DirectionTableViewCell.reuse, for: indexPath) as? DirectionTableViewCell else { return UITableViewCell() }
         let direction = directions[indexPath.item]
-        cell.configure(stepNumber: direction.stepNumber, title: direction.title, description: direction.description, isCompleted: direction.isCompleted)
+        cell.configure(stepNumber: direction.stepNumber, description: direction.description, isCompleted: direction.isCompleted)
         cell.buttonAction = { [weak self] in
             self?.directions[indexPath.item].isCompleted.toggle()
             tableView.reloadData()}

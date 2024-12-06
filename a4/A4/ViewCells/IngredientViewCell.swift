@@ -1,12 +1,4 @@
-//
-//  IngredientViewCell.swift
-//  A4
-//
-//  Created by Christopher Cheng on 11/26/24.
-//
-
 import UIKit
-import SnapKit
 import SDWebImage
 
 class IngredientViewCell: UICollectionViewCell {
@@ -30,9 +22,16 @@ class IngredientViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure cell function
-    func configure(with image: UIImage?, text: String) {
-        imageView.image = image
-        label.text = text
+    func configure(ingredient: Ingredient) {
+        // Load the image from a web URL using SDWebImage
+        if let url = URL(string: ingredient.imageUrl) {
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
+        } else {
+            imageView.image = UIImage(named: "placeholder") // Fallback to a default image if URL is invalid
+        }
+        
+        // Set the label text
+        label.text = ingredient.name
     }
     
     //MARK: Set up functions
@@ -50,7 +49,6 @@ class IngredientViewCell: UICollectionViewCell {
             imageView.widthAnchor.constraint(equalToConstant: 100),
             imageView.heightAnchor.constraint(equalToConstant: 100),
         ])
-        
     }
     
     private func setupLabel() {
@@ -67,6 +65,3 @@ class IngredientViewCell: UICollectionViewCell {
         ])
     }
 }
-
-
-
