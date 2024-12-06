@@ -19,19 +19,24 @@ class NetworkManager {
     
     let decoder: JSONDecoder = JSONDecoder()
     
+    let dateFormatter = DateFormatter()
+
+    
     func createStory(userId: String, caption: String, imageUrl: String, completion: @escaping (Story) -> Void) {
         
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
         
         let endpoint: String = "\(devEndpoint)/users/1/stories/"
         
         let parameters: Parameters = [
-            "user_id": userId,
-            "caption": caption,
+            "user_id": "test",
+            "caption": "test",
             "title": "testTitle",
-            "image_url": imageUrl,
-        ]
+            "image_url": "test"
+/*            "created_at": "test",  */      ]
         
         
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
@@ -43,8 +48,10 @@ class NetworkManager {
                     print(storyResponse.data)
                     completion(storyResponse.data)
                 case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
                     print("Error in NetworkManager.createStory: \(error.localizedDescription)")
-                    print("No response data")
                 }
             }
     }
@@ -54,21 +61,26 @@ class NetworkManager {
      */
     func fetchStories(completion: @escaping ([Story]) -> Void) {
         // Specify the endpoint
-        let endpoint = "\(devEndpoint)"
+        let endpoint = "\(devEndpoint)/stories/"
         
-        decoder.dateDecodingStrategy = .iso8601
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         // Create the request
         AF.request(endpoint, method: .get)
             .validate()
-            .responseDecodable(of: [Story].self, decoder: decoder) { response in
+            .responseDecodable(of: FetchStoryResponse.self, decoder: decoder) { response in
                 // Handle the response
                 switch response.result {
-                case .success(let stories):
-                    print("Successfully fetched \(stories.count) posts")
-                    completion(stories)
+                case .success(let storyResponse):
+                    print("Successfully fetched \(storyResponse.data.stories.count) posts")
+                    completion(storyResponse.data.stories)
                 case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
                     print("Error in NetworkManager.fetchPosts: \(error.localizedDescription)")
                 }
             }

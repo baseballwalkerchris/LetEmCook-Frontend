@@ -4,6 +4,8 @@ class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
+    private let headerView = UIView()
+    private let logoView = UIImageView()
     private let segmentedControl = UISegmentedControl(items: ["Stories", "Recipes", "Events"])
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -34,8 +36,10 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.a4.offWhite
-        title = "My Feed"
+//        title = "My Feed"
         
+        setupHeaderView()
+//        setupLogoView()
         setupSegmentedView()
         setupScrollView()
         setupContentView()
@@ -60,6 +64,21 @@ class HomeViewController: UIViewController {
     }
     
     // MARK: - Set up views
+    
+    private func setupHeaderView() {
+        headerView.backgroundColor = UIColor.systemBlue
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 130) // Adjust height as needed
+        ])
+    }
+    
+    
     
     private func setupSegmentedView() {
         segmentedControl.selectedSegmentIndex = 0

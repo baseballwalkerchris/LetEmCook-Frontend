@@ -36,6 +36,8 @@ class EventViewCell: UICollectionViewCell {
     private let gradientLayer = CAGradientLayer()
     
     static let reuse = "EventViewCellReuse"
+
+
     
     //MARK: - Inits
     override init(frame: CGRect) {

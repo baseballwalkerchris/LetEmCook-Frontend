@@ -12,6 +12,15 @@ struct StoryResponse: Decodable {
     let data: Story
 }
 
+struct FetchStoryResponse: Decodable {
+    let success: Bool
+    let data: StoryData
+}
+
+struct StoryData: Decodable {
+    let stories: [Story]
+}
+
 struct Story: Decodable {
     let id: Int
     let imageUrl: String
