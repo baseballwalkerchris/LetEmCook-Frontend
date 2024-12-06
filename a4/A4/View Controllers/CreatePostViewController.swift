@@ -150,7 +150,7 @@ class CreatePostViewController: UIViewController {
     
     private func setupCustomHeaderView() {
         view.addSubview(customHeaderView)
-        customHeaderView.titleLabel.text = "New Post"
+
         customHeaderView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -164,23 +164,41 @@ class CreatePostViewController: UIViewController {
     
     private func setupSegmentedControl() {
         segmentedControl.selectedSegmentIndex = 0 // Default to "Story"
+        segmentedControl.backgroundColor = .white
+        segmentedControl.selectedSegmentTintColor = UIColor.systemBlue.withAlphaComponent(0.4)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .normal)
         
         view.addSubview(segmentedControl)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         
         NSLayoutConstraint.activate([
-            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            segmentedControl.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            segmentedControl.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            segmentedControl.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            segmentedControl.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10)
         ])
     }
     
+
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         storyScrollView.isHidden = sender.selectedSegmentIndex != 0
         recipeScrollView.isHidden = sender.selectedSegmentIndex != 1
         eventScrollView.isHidden = sender.selectedSegmentIndex != 2
+
+        switch sender.selectedSegmentIndex {
+        case 0:
+            customHeaderView.titleLabel.text = "New Story"
+        case 1:
+            customHeaderView.titleLabel.text = "New Recipe"
+        case 2:
+            customHeaderView.titleLabel.text = "New Event"
+
+        default:
+            customHeaderView.titleLabel.text = "New Post"
+        }
     }
+    
     
     // MARK: Post ScrollView
     

@@ -8,7 +8,7 @@ class MainTabBarController: UITabBarController {
         let profileVC = ProfileViewController()
         let createProfileVC = CreatePostViewController()
         
-        tabBar.tintColor = UIColor.systemBlue
+        tabBar.tintColor = UIColor.systemBlue.withAlphaComponent(0.7)
         homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "homePageIcon2"), selectedImage: nil)
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profilePageIcon2"), selectedImage: nil)
         createProfileVC.tabBarItem =  UITabBarItem(title: "Create", image: UIImage(named: "createPostIconPage"), selectedImage: nil)
