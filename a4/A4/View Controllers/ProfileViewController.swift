@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, ItemCellDelegate {
     
     //MARK: properties, views
     private let customHeaderView = CustomHeaderView()
@@ -73,6 +73,11 @@ class ProfileViewController: UIViewController {
         return layout
     }
     
+    func addButtonTapped() {
+        let newIngredientVC = NewIngredientViewController()
+        navigationController?.pushViewController(newIngredientVC, animated: true)
+    }
+    
     //MARK: Inits
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -89,7 +94,8 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.a4.offWhite
 
-        setupCustomHeaderView()setupTopProfileContainer()
+        setupCustomHeaderView()
+        setupTopProfileContainer()
         setupTabBar()
         setUpFridgeScrollView()
         setUpProfileImage()
@@ -435,6 +441,7 @@ extension ProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dairyCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
+            cell.delegate = self
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
@@ -443,6 +450,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             return cell
         } else if collectionView == vegetableCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
+            cell.delegate = self
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
@@ -451,6 +459,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             return cell
         } else if collectionView == meatCollectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
+            cell.delegate = self
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
@@ -460,6 +469,7 @@ extension ProfileViewController: UICollectionViewDataSource {
         } else if collectionView == savedCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SavedItemCell.reuse, for: indexPath) as! SavedItemCell
             let item = savedItems[indexPath.item]
+            
             cell.configure(with: item)
             return cell
         } else  {
@@ -473,7 +483,17 @@ extension ProfileViewController: UICollectionViewDataSource {
     
 }
 
-extension ProfileViewController: UICollectionViewDelegate { }
+extension ProfileViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.item == 0 {
+            let newIngredientVC = NewIngredientViewController()
+            newIngredientVC.modalPresentationStyle = .formSheet // Or .fullScreen, depending on your needs
+            present(newIngredientVC, animated: true)
+        }
+    }
+}
+
+
 
 
 extension ProfileViewController {
@@ -520,3 +540,5 @@ extension ProfileViewController {
 
    
 }
+
+    
