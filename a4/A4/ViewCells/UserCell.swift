@@ -33,6 +33,7 @@ class UserCell: UICollectionViewCell {
         userImage.image = UIImage(named: user.userImage)
         username.text = user.username
     }
+
     
     
     private func setUpUserImage(){
@@ -49,6 +50,8 @@ class UserCell: UICollectionViewCell {
         }
     }
     
+   
+    
     private func setUpUsername(){
         username.textColor = UIColor.a4.black
         username.font = .systemFont(ofSize: 12, weight: .light).rounded
@@ -56,7 +59,7 @@ class UserCell: UICollectionViewCell {
         
         username.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(userImage.snp.bottom).offset(4)
+            make.top.equalTo(userImage.snp.bottom).offset(2)
         }
     }
    
