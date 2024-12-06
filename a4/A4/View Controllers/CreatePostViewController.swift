@@ -74,8 +74,8 @@ class CreatePostViewController: UIViewController {
     
     // TODO: fetch all the ingredients from fridge
     var ingredients: [Ingredient] = [
-        Ingredient(id: 0, name: "Tomato", quantity: "5 of them", imageUrl: "tomato"),
-        Ingredient(id: 1, name: "Cucumber", quantity: "6 long ones", imageUrl: "cucumber")
+//        Ingredient(id: 0, name: "Tomato", quantity: "5 of them", imageUrl: "tomato"),
+//        Ingredient(id: 1, name: "Cucumber", quantity: "6 long ones", imageUrl: "cucumber")
     ]
     
     // MARK: - Lifecycle
@@ -607,7 +607,7 @@ class CreatePostViewController: UIViewController {
         addIngredientButton.backgroundColor = UIColor.systemBlue
         
         // Add target action
-//        addIngredientButton.addTarget(self, action: #selector(addIngredientTapped), for: .touchUpInside)
+        addIngredientButton.addTarget(self, action: #selector(addIngredientTapped), for: .touchUpInside)
         
         // Add button to recipeContentView
         recipeContentView.addSubview(addIngredientButton)
@@ -620,6 +620,34 @@ class CreatePostViewController: UIViewController {
             addIngredientButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
             addIngredientButton.centerYAnchor.constraint(equalTo: ingredientsCollectionView.centerYAnchor, constant: -5)
         ])
+    }
+    
+    @objc private func addIngredientTapped() {
+        let dimmedBackgroundVC = UIViewController()
+        dimmedBackgroundVC.modalPresentationStyle = .overFullScreen
+        dimmedBackgroundVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        
+        let ingredientsPopup = IngredientsPopupViewController()
+        ingredientsPopup.onIngredientSelected = { [weak self] selectedIngredient in
+            guard let self = self else { return }
+            self.ingredients.append(selectedIngredient)
+            self.ingredientsCollectionView.reloadData()
+            dimmedBackgroundVC.dismiss(animated: true)
+        }
+        
+        dimmedBackgroundVC.addChild(ingredientsPopup)
+        dimmedBackgroundVC.view.addSubview(ingredientsPopup.view)
+        ingredientsPopup.view.translatesAutoresizingMaskIntoConstraints = false
+        ingredientsPopup.view.layer.cornerRadius = 20 // Rounded corners
+        ingredientsPopup.view.layer.masksToBounds = true
+        NSLayoutConstraint.activate([
+            ingredientsPopup.view.centerXAnchor.constraint(equalTo: dimmedBackgroundVC.view.centerXAnchor),
+            ingredientsPopup.view.centerYAnchor.constraint(equalTo: dimmedBackgroundVC.view.centerYAnchor),
+            ingredientsPopup.view.widthAnchor.constraint(equalToConstant: 400),
+            ingredientsPopup.view.heightAnchor.constraint(equalToConstant: 500)
+        ])
+        
+        present(dimmedBackgroundVC, animated: true)
     }
     
     private func setupIngredientsCollectionView() {

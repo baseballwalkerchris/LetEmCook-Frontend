@@ -93,7 +93,21 @@ class NetworkManager {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
         
-        let endpoint: String = "\(devEndpoint)/users/1/stories/"
+        let endpoint: String = "\(devEndpoint)/users/1/recipes/"
+            
+        let ingredientsJSON: String
+        let directionsJSON: String
+
+        do {
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            ingredientsJSON = String(data: try encoder.encode(ingredients), encoding: .utf8) ?? "[]"
+            directionsJSON = String(data: try encoder.encode(directions), encoding: .utf8) ?? "[]"
+        } catch {
+            print("Failed to encode ingredients or directions: \(error.localizedDescription)")
+            return
+        }
+
         
         let parameters: Parameters = [
             "user_id": userId,
@@ -103,10 +117,10 @@ class NetworkManager {
             "servings": servings,
             "ratings": ratings,
             "description": description,
-            "ingredients": ingredients,
-            "directions": directions
+            "ingredients": ingredientsJSON,
+            "instructions": directionsJSON
         ]
-                    
+
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
@@ -202,6 +216,27 @@ class NetworkManager {
                 case .success(let eventResponse):
                     print("Successfully fetched \(eventResponse.data.events.count) events")
                     completion(eventResponse.data.events)
+                case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
+                    print("Error in NetworkManager.fetchEvents: \(error.localizedDescription)")
+                }
+            }
+    }
+
+    func fetchIngredients(completion: @escaping ([Ingredient]) -> Void ) {
+        let endpoint = "\(devEndpoint)/users/1/ingredients/"
+        
+        // Create the request
+        AF.request(endpoint, method: .get)
+            .validate()
+            .responseDecodable(of: FetchIngredientResponse.self, decoder: decoder) { response in
+                // Handle the response
+                switch response.result {
+                case .success(let ingredientResponse):
+                    print("Successfully fetched \(ingredientResponse.data.ingredients.count) events")
+                    completion(ingredientResponse.data.ingredients)
                 case .failure(let error):
                     if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
                         print("Raw Response: \(rawResponse)") // Log the raw JSON response

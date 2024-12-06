@@ -1,6 +1,6 @@
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomescreenViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -74,7 +74,7 @@ class HomeViewController: UIViewController {
     // MARK: - Set up views
     
     private func setupHeaderView() {
-        headerView.backgroundColor = UIColor.systemBlue
+        headerView.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.4)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
         
@@ -91,7 +91,7 @@ class HomeViewController: UIViewController {
     private func setupSegmentedView() {
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.backgroundColor = .white
-        segmentedControl.selectedSegmentTintColor = .systemBlue
+        segmentedControl.selectedSegmentTintColor = UIColor.systemBlue.withAlphaComponent(0.4)
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .normal)
         
@@ -263,14 +263,14 @@ class HomeViewController: UIViewController {
     
     private func loadMockRecipes() {
         recipes = [
-            Recipe(id: 1, userId: "chef1", title: "Recipe 1", imageUrl: "https://example.com/recipe1.jpg", time: "30 mins", servings: "2", ratings: "5", description: "Delicious recipe 1", ingredients: [], directions: [], createdAt: Date()),
-            Recipe(id: 2, userId: "chef2", title: "Recipe 2", imageUrl: "https://example.com/recipe2.jpg", time: "45 mins", servings: "4", ratings: "4", description: "Tasty recipe 2", ingredients: [], directions: [], createdAt: Date())
+            Recipe(id: 1, userId: "chef1", title: "Recipe 1", imageUrl: "https://example.com/recipe1.jpg", time: "30 mins", servings: "2", ratings: "5", description: "Delicious recipe 1", ingredients: [], instructions: [], createdAt: Date()),
+            Recipe(id: 2, userId: "chef2", title: "Recipe 2", imageUrl: "https://example.com/recipe2.jpg", time: "45 mins", servings: "4", ratings: "4", description: "Tasty recipe 2", ingredients: [], instructions: [], createdAt: Date())
         ]
         recipesCollectionView.reloadData()
     }
 }
 
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension HomescreenViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == storiesCollectionView {
             return stories.count
