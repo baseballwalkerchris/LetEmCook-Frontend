@@ -49,6 +49,29 @@ class ProfileViewController: UIViewController {
     private let vegetableImages = ["cucumber","cucumber","cucumber","cucumber","cucumber","cucumber","cucumber"]
     private let meatImages = ["meat", "meat", "meat"]
     
+    //MARK: views/Data for saved
+    private var savedCollectionView: UICollectionView!
+    private let savedItems = ["Post", "Recipe", "Event"]
+    private let savedItemImages = ["post_icon", "recipe_icon", "event_icon"]
+    
+    //MARK: Views/data for events
+    private var eventsCollectionView: UICollectionView!
+    private let events = [
+            ("Taco Tuesday", "5:30 PM 12/23/25", "Eddy Gate Apartments"),
+            ("Popcorn Movie", "6:00 PM 12/24/25", "Downtown Cinema"),
+            ("Pizza Party", "7:00 PM 12/25/25", "Central Park")
+        ]
+   
+
+    private func createSavedCollectionLayout() -> UICollectionViewFlowLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 32, height: 100)
+        layout.minimumLineSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return layout
+    }
+    
     //MARK: Inits
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -65,19 +88,27 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.a4.offWhite
 
-        
+        setupTopProfileContainer()
+        setupTabBar()
         setUpFridgeScrollView()
-        setUpTopProfileContainerView()
         setUpProfileImage()
         setUpNameLabel()
         setUpDetailsLabel()
         setUpIconsStackView()
-        setupTabBar()
         setUpGenerateAndMergeButtons()
         setupDairySection()
         setupVegetableSection()
         setupMeatSection()
         
+        setUpMyPostsScrollView()
+        setUpEventsScrollView()
+        setupEventsCollectionView()
+        
+        setUpBookmarkedScrollView()
+        setupSavedCollectionView()
+        
+        tabBarChanged(tabBar)
+ 
     }
     
     //MARK: set up functions
@@ -89,7 +120,7 @@ class ProfileViewController: UIViewController {
         tabBar.addTarget(self, action: #selector(tabBarChanged(_:)), for: .valueChanged)
         
         tabBar.snp.makeConstraints { make in
-            make.top.equalTo(topProfileContainerView.snp.bottom).offset(16)
+            make.top.equalTo(topProfileContainerView.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(16)
         }
     }
@@ -101,25 +132,84 @@ class ProfileViewController: UIViewController {
         eventsScrollView.isHidden = sender.selectedSegmentIndex != 3
     }
     
-    private func setUpTopProfileContainerView() {
+    private func setupTopProfileContainer() {
         view.addSubview(topProfileContainerView)
-        topProfileContainerView.snp.makeConstraints{ make in
-            make.trailing.leading.equalToSuperview()
-            make.top.equalToSuperview().inset(150)
-            make.bottom.equalTo(view.snp.top).inset(250)
+        topProfileContainerView.snp.makeConstraints { make in
+               make.top.equalTo(view.safeAreaLayoutGuide)
+               make.leading.trailing.equalToSuperview()
+               make.height.equalTo(150)
         }
     }
     
+    
     private func setUpFridgeScrollView() {
+        fridgeScrollView.alwaysBounceVertical = true
+        fridgeScrollView.isScrollEnabled = true
+        fridgeScrollView.showsVerticalScrollIndicator = true
         view.addSubview(fridgeScrollView)
         fridgeScrollView.addSubview(fridgeContentView)
-        fridgeScrollView.addSubview(topProfileContainerView)
+        
+
         
         fridgeScrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(tabBar.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         fridgeContentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+    }
+    
+    private func setUpMyPostsScrollView() {
+        myPostsScrollView.alwaysBounceVertical = true
+        myPostsScrollView.isScrollEnabled = true
+        myPostsScrollView.showsVerticalScrollIndicator = true
+        view.addSubview(myPostsScrollView)
+        myPostsScrollView.addSubview(myPostsContentView)
+        
+        myPostsScrollView.snp.makeConstraints { make in
+            make.top.equalTo(tabBar.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        myPostsContentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+    }
+    
+    private func setUpBookmarkedScrollView(){
+        savedScrollView.alwaysBounceVertical = true
+        savedScrollView.isScrollEnabled = true
+        savedScrollView.showsVerticalScrollIndicator = true
+        view.addSubview(savedScrollView)
+        savedScrollView.addSubview(savedContentView)
+        savedScrollView.snp.makeConstraints { make in
+            make.top.equalTo(tabBar.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        savedContentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+    }
+    
+    private func setUpEventsScrollView(){
+        view.addSubview(eventsScrollView)
+        eventsScrollView.addSubview(eventsContentView)
+        eventsScrollView.snp.makeConstraints { make in
+            make.top.equalTo(tabBar.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        eventsContentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
@@ -133,6 +223,8 @@ class ProfileViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.image = UIImage(named: "profileImage")
         topProfileContainerView.addSubview(profileImageView)
+
+    
        
         
         profileImageView.snp.makeConstraints { make in
@@ -146,6 +238,8 @@ class ProfileViewController: UIViewController {
         nameLabel.text = "Andrew Smith"
         nameLabel.font = .boldSystemFont(ofSize: 18)
         topProfileContainerView.addSubview(nameLabel)
+
+       
         
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(profileImageView)
@@ -168,6 +262,14 @@ class ProfileViewController: UIViewController {
         socialIconsStackView.axis = .horizontal
         socialIconsStackView.spacing = 8
         topProfileContainerView.addSubview(socialIconsStackView)
+ 
+        socialIconsStackView.addArrangedSubview(UIImageView(image: UIImage(named: "instagram")))
+        socialIconsStackView.addArrangedSubview(UIImageView(image: UIImage(named: "facebook")))
+        socialIconsStackView.addArrangedSubview(UIImageView(image: UIImage(named: "twitter")))
+        socialIconsStackView.snp.makeConstraints { make in
+            make.top.equalTo(detailsLabel.snp.bottom).offset(8)
+            make.leading.equalTo(nameLabel)
+        }
     }
     
 
@@ -187,17 +289,17 @@ class ProfileViewController: UIViewController {
         mergeFridgeButton.layer.cornerRadius = 8
         
         generateRecipeButton.snp.makeConstraints { make in
-            make.top.equalTo(tabBar.snp.bottom).offset(16)
+            make.top.equalToSuperview().offset(16)
             make.leading.equalToSuperview().offset(16)
             make.height.equalTo(44)
-            make.width.equalTo(150)
+            make.width.equalTo(180)
         }
         
         mergeFridgeButton.snp.makeConstraints { make in
             make.top.equalTo(generateRecipeButton)
             make.trailing.equalToSuperview().inset(16)
             make.height.equalTo(44)
-            make.width.equalTo(150)
+            make.width.equalTo(180)
         }
     }
     
@@ -228,6 +330,7 @@ class ProfileViewController: UIViewController {
             make.top.equalTo(dairyLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(120)
+            make.bottom.equalTo(dairyLabel.snp.bottom).offset(127)
         }
     }
     
@@ -259,6 +362,7 @@ class ProfileViewController: UIViewController {
             make.top.equalTo(vegetableLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(120)
+            make.bottom.equalTo(vegetableLabel.snp.bottom).offset(128)
         }
     }
     
@@ -297,42 +401,108 @@ class ProfileViewController: UIViewController {
 extension ProfileViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == dairyCollectionView {
-            return dairyItems.count
-        } else if collectionView == vegetableCollectionView {
-            return vegetableItems.count
+        if tabBar.selectedSegmentIndex == 0 {
+            if collectionView == dairyCollectionView {
+                return dairyItems.count
+            } else if collectionView == vegetableCollectionView {
+                return vegetableItems.count
+            } else {
+                return meatItems.count
+            }
+        } else if tabBar.selectedSegmentIndex == 2 {
+            return 0
+        } else if  tabBar.selectedSegmentIndex == 3 {
+            return savedItems.count
         } else {
-            return meatItems.count
+            return events.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
-        
         if collectionView == dairyCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             if indexPath.item == 0 {
-                cell.configureAddButton()
-            } else {
-                cell.configure(with: dairyItems[indexPath.item], with: dairyImages[indexPath.item])
-            }
-            
+                    cell.configureAddButton()
+                } else {
+                    cell.configure(with: dairyItems[indexPath.item], with: dairyImages[indexPath.item])
+                }
+            return cell
         } else if collectionView == vegetableCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             if indexPath.item == 0 {
-                cell.configureAddButton()
-            } else {
-                cell.configure(with: vegetableItems[indexPath.item], with: vegetableImages[indexPath.item])
+                    cell.configureAddButton()
+                } else {
+                    cell.configure(with: vegetableItems[indexPath.item], with: vegetableImages[indexPath.item])
             }
-        } else {
+            return cell
+        } else if collectionView == meatCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             if indexPath.item == 0 {
-                cell.configureAddButton()
-            } else {
-                cell.configure(with: meatItems[indexPath.item], with: meatImages[indexPath.item])
-            }
+                    cell.configureAddButton()
+                } else {
+                    cell.configure(with: meatItems[indexPath.item], with: meatImages[indexPath.item])
+                }
+            return cell
+        } else if collectionView == savedCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SavedItemCell.reuse, for: indexPath) as! SavedItemCell
+            let item = savedItems[indexPath.item]
+            cell.configure(with: item)
+            return cell
+        } else  {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventItemCell.reuse, for: indexPath) as! EventItemCell
+            let event = events[indexPath.item]
+            cell.configure(with: event)
+            return cell
         }
-        
-        return cell
+  
     }
     
 }
 
 extension ProfileViewController: UICollectionViewDelegate { }
+
+
+extension ProfileViewController {
+    private func setupSavedCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: 115, height: 115)
+        layout.minimumLineSpacing = 4
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        savedCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        savedCollectionView.register(SavedItemCell.self, forCellWithReuseIdentifier: SavedItemCell.reuse)
+        savedCollectionView.dataSource = self
+        savedCollectionView.delegate = self
+        savedCollectionView.backgroundColor = .clear
+        savedContentView.addSubview(savedCollectionView)
+        
+        savedCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(20)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    private func setupEventsCollectionView() {
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        
+        layout.itemSize = CGSize(width: 130, height: 130)
+        layout.minimumLineSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        eventsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        eventsCollectionView.register(EventItemCell.self, forCellWithReuseIdentifier: EventItemCell.reuse)
+        eventsCollectionView.dataSource = self
+        eventsCollectionView.delegate = self
+        eventsCollectionView.backgroundColor = .clear
+        eventsContentView.addSubview(eventsCollectionView)
+        
+        eventsCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(20)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            
+        }
+    }
+
+   
+}
