@@ -35,6 +35,9 @@ class SocialEventViewCell: UICollectionViewCell {
     
     private let gradientLayer = CAGradientLayer()
     
+    //so can tap the cell
+    var onImageTapped: (() -> Void)?
+    
     static let reuse = "SocialEventViewCellReuse"
     
     //MARK: - Inits

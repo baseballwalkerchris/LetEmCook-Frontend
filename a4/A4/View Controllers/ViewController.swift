@@ -110,6 +110,10 @@ extension HomescreenViewController: UICollectionViewDataSource {
                 }
                 let socialIndex = indexPath.row - recipePosts.count
                 cell.socialConfigure(socialEvent: socialPosts[socialIndex])
+                cell.onImageTapped = { [weak self] in
+                    let recipeVC = SocialEventViewController()
+                    self?.navigationController?.pushViewController(recipeVC, animated: true)
+                }
                 return cell
             }
         }
@@ -137,3 +141,31 @@ extension HomescreenViewController: UICollectionViewDelegateFlowLayout {
   
     
 }
+
+
+//MARK: - UICollectionViewDelegate
+
+extension HomescreenViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+            let selectedSocialPost = socialPosts[indexPath.item - recipePosts.count]
+            let socialVC = SocialEventViewController(socialPost: selectedSocialPost)
+            socialVC.delegate = self
+            navigationController?.pushViewController(socialVC, animated: true)
+        
+        
+    }
+    
+    
+}
+
+//MARK: SocialEventViewControllerDelegate
+
+extension HomescreenViewController: SocialEventViewControllerDelegate {
+    func passSocialInfo() {
+        return
+    }
+    
+}
+
+
