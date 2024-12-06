@@ -132,17 +132,6 @@ class NetworkManager {
             }
     }
     
-    struct Event: Codable {
-        let id: Int
-        let userId: String
-        let title: String
-        let imageUrl: String
-        let description: String
-        let location: String
-        let capacity: String
-        let date: Date
-        let createdAt: Date
-    }
     
     func createEvent(
         userId: String, title: String, imageUrl: String, description: String,
@@ -152,6 +141,8 @@ class NetworkManager {
         decoder.dateDecodingStrategy = .iso8601
         
         let endpoint: String = "\(devEndpoint)/users/1/stories/"
+        
+            
         
         let parameters: Parameters = [
             "user_id": userId,

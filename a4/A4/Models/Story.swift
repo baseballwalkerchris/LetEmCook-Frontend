@@ -17,5 +17,5 @@ struct Story: Decodable {
     let imageUrl: String
     let title: String
     let caption: String
-    let createdAt: String // Use `Date` if preferred with ISO 8601 decoding
+    let createdAt: Date // Use `Date` if preferred with ISO 8601 decoding
 }

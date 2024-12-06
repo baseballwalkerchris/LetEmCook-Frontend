@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import SDWebImage
 
-class SocialEventViewCell: UICollectionViewCell {
+class EventViewCell: UICollectionViewCell {
     
     // MARK: - Properties (view)
     private let foodImage = UIImageView()
@@ -35,7 +35,7 @@ class SocialEventViewCell: UICollectionViewCell {
     
     private let gradientLayer = CAGradientLayer()
     
-    static let reuse = "SocialEventViewCellReuse"
+    static let reuse = "EventViewCellReuse"
     
     //MARK: - Inits
     override init(frame: CGRect) {
@@ -66,19 +66,31 @@ class SocialEventViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Configure, TO DO
-    func socialConfigure(socialEvent: Event){
-        //setupimage
-        let recipeImageUrl = URL(string: socialEvent.imageUrl)
-        foodImage.sd_setImage(with: recipeImageUrl)
-        eventName.text = socialEvent.title
-        author.text = "From \(socialEvent.userId)"
-        attendeesLabel.text = "\(socialEvent.capacity) total"
-        locationLabel.text = socialEvent.location
-//        timeLabel.text = socialEvent.date
-        descriptionMessage.text = socialEvent.description
+    //MARK: - Configure
+    func configure(event: Event) {
+        // Set up the food image
+        if let recipeImageUrl = URL(string: event.imageUrl) {
+            foodImage.sd_setImage(with: recipeImageUrl)
+        }
         
-      
+        // Assign title and user details
+        eventName.text = event.title
+        eventName.textColor = .black
+        author.text = "From \(event.userId)"
+        
+        // Set attendees' capacity
+        attendeesLabel.text = "\(event.capacity) attendees"
+
+        // Assign location
+        locationLabel.text = event.location
+
+        // Format and assign the event date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" // Example: Dec 12, 2024 5:30 PM
+        timeLabel.text = dateFormatter.string(from: event.date)
+
+        // Assign event description
+        descriptionMessage.text = event.description
     }
     
     //MARK: Set up functions
@@ -92,11 +104,14 @@ class SocialEventViewCell: UICollectionViewCell {
         foodImage.clipsToBounds = false // Make sure the shadow is not clipped
         contentView.addSubview(foodImage)
         
+        foodImage.translatesAutoresizingMaskIntoConstraints = false
         
-        foodImage.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(140)
-        }
+        NSLayoutConstraint.activate([
+            foodImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            foodImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            foodImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            foodImage.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.6) // Adjust the height ratio
+        ])
     }
     
     private func setUpBookmarkButton(){

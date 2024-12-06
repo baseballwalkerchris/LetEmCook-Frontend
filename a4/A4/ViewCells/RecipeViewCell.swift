@@ -1,27 +1,23 @@
-//
-//  RecipeViewCell.swift
-//  A4
-//
-//  Created by Aidan Joseph on 11/25/24.
-//
-
 import UIKit
 import SnapKit
 import SDWebImage
 
-class ReceipeViewCell: UICollectionViewCell {
+class RecipeViewCell: UICollectionViewCell {
     
     // MARK: - Properties (view)
-    private let username = UILabel()
-    private let caption = UILabel()
     private let foodImage = UIImageView()
+    private let titleLabel = UILabel()
+    private let userLabel = UILabel()
     private let bookmarkButton = UIButton()
-    private let timePassedSincePosted = UILabel()
-    var onImageTapped: (() -> Void)?
+    private let timeLabel = UILabel()
+    private let servingsLabel = UILabel()
+    private let ratingLabel = UILabel()
+    private let descriptionLabel = UILabel()
+    private let ingredientsStackView = UIStackView()
     
     static let reuse = "RecipeViewCellReuse"
     
-    //MARK: - Inits
+    // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = UIColor.white
@@ -30,120 +26,147 @@ class ReceipeViewCell: UICollectionViewCell {
         contentView.layer.borderWidth = 0.5
         contentView.layer.borderColor = UIColor.lightGray.cgColor
         
-        setUpFoodImage()
-        setUpUsername()
-        setUpCaption()
-        setUpBookmarkButton()
-        setUpTimeSincePosted()
+        setupFoodImage()
+        setupTitleLabel()
+        setupUserLabel()
+        setupBookmarkButton()
+        setupTimeServingsRating()
+        setupDescriptionLabel()
+        setupIngredientsStackView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Configure cell function
-    func recipeConfigure(recipePost: Recipe){
-        //setupimage
-        let recipeImageUrl = URL(string: recipePost.imageUrl)
-        foodImage.sd_setImage(with: recipeImageUrl)
-        //foodImage.image = UIImage(named: recipePost.imageURL)
-        username.text = recipePost.userId
-        //caption.text = recipePost.caption
-        timePassedSincePosted.text = recipePost.createdAt.convertToAgo()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = CGFloat(recipePost.userId.count * 8)
-        paragraphStyle.headIndent = 0// First line stays aligned with the username// Indentation for subsequent lines
+    // MARK: - Configure cell function
+    func configure(recipe: Recipe) {
+        if let recipeImageUrl = URL(string: recipe.imageUrl) {
+            foodImage.sd_setImage(with: recipeImageUrl)
+        }
+        titleLabel.text = recipe.title
+        userLabel.text = "By \(recipe.userId)"
+        timeLabel.text = "\(recipe.time)"
+        servingsLabel.text = "\(recipe.servings) serv"
+        ratingLabel.text = "\(recipe.ratings)/10"
+        descriptionLabel.text = recipe.description
         
-        let attributedCaption = NSAttributedString(
-            string: recipePost.description,
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 14, weight: .light).rounded,
-                .foregroundColor: UIColor.a4.black,
-                .paragraphStyle: paragraphStyle
-            ]
-        )
-        caption.attributedText = attributedCaption
-    
-        
+        // Clear previous tags and add ingredient tags
+        ingredientsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        recipe.ingredients.prefix(4).forEach { ingredient in
+            let label = createTagLabel(text: ingredient.name)
+            ingredientsStackView.addArrangedSubview(label)
+        }
     }
     
-    //MARK: Set up functions
-    private func setUpFoodImage(){
+    // MARK: - UI Setup
+    private func setupFoodImage() {
         foodImage.contentMode = .scaleAspectFill
         foodImage.clipsToBounds = true
-        foodImage.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        foodImage.addGestureRecognizer(tapGesture)
-       
         contentView.addSubview(foodImage)
         
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-//            make.bottom.equalToSuperview().inset(30)
             make.height.equalTo(contentView.snp.width).multipliedBy(0.75)
         }
     }
     
-    private func setUpUsername(){
-        username.textColor = UIColor.a4.black
-        username.font = .systemFont(ofSize: 14, weight: .semibold).rounded
-        //username.numberOfLines = 1
+    private func setupTitleLabel() {
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        titleLabel.textColor = UIColor.black
+        contentView.addSubview(titleLabel)
         
-        contentView.addSubview(username)
-        username.snp.makeConstraints { make in
-            make.top.equalTo(foodImage.snp.bottom).offset(6)
-            make.leading.equalToSuperview().inset(8)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(foodImage.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(10)
         }
     }
     
-    private func setUpCaption(){
-        caption.textColor = UIColor.a4.black
-        caption.font = .systemFont(ofSize: 10, weight: .light).rounded
-        caption.numberOfLines = 0
-        caption.lineBreakMode = .byWordWrapping
-        //caption.firstBaselineAnchor.constraint(equalTo: username.lastBaselineAnchor).isActive = true
-
+    private func setupUserLabel() {
+        userLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        userLabel.textColor = UIColor.gray
+        contentView.addSubview(userLabel)
         
-        contentView.addSubview(caption)
-      
-        caption.snp.makeConstraints { make in
-            make.top.equalTo(foodImage.snp.bottom).offset(6)
-            make.leading.equalToSuperview().offset(8)
-           // make.top.equalTo(username.snp.top) // Align first line with username's top
-            make.trailing.equalToSuperview().offset(12)
-            
+        userLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.leading.equalToSuperview().offset(10)
         }
     }
     
-    private func setUpBookmarkButton(){
-        bookmarkButton.setImage(UIImage(named: "notBookmarked"), for: .normal)
-        bookmarkButton.tintColor = .darkGray
+    private func setupBookmarkButton() {
+        bookmarkButton.setImage(UIImage(named: "bookmark"), for: .normal)
         contentView.addSubview(bookmarkButton)
         
         bookmarkButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(8)
-            make.trailing.equalToSuperview().inset(12)
+            make.trailing.equalToSuperview().inset(10)
+            make.centerY.equalTo(titleLabel)
+            make.width.height.equalTo(20)
+        }
+    }
+    
+    private func setupTimeServingsRating() {
+        let stackView = UIStackView(arrangedSubviews: [timeLabel, servingsLabel, ratingLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        contentView.addSubview(stackView)
+        
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(userLabel.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(10)
+        }
+        
+        setupLabel(timeLabel, fontSize: 12)
+        setupLabel(servingsLabel, fontSize: 12)
+        setupLabel(ratingLabel, fontSize: 12)
+    }
+    
+    private func setupDescriptionLabel() {
+        descriptionLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        descriptionLabel.textColor = UIColor.black
+        descriptionLabel.numberOfLines = 3
+        contentView.addSubview(descriptionLabel)
+        
+        descriptionLabel.snp.makeConstraints { make in
+            make.top.equalTo(timeLabel.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().inset(10)
+        }
+    }
+    
+    private func setupIngredientsStackView() {
+        ingredientsStackView.axis = .horizontal
+        ingredientsStackView.spacing = 5
+        ingredientsStackView.alignment = .center
+        contentView.addSubview(ingredientsStackView)
+        
+        ingredientsStackView.snp.makeConstraints { make in
+            make.top.equalTo(descriptionLabel.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().inset(10)
+        }
+    }
+    
+    // MARK: - Helpers
+    private func setupLabel(_ label: UILabel, fontSize: CGFloat) {
+        label.font = UIFont.systemFont(ofSize: fontSize, weight: .regular)
+        label.textColor = UIColor.gray
+    }
+    
+    private func createTagLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor.lightGray
+        label.layer.cornerRadius = 4
+        label.layer.masksToBounds = true
+        label.textAlignment = .center
+        label.snp.makeConstraints { make in
             make.height.equalTo(20)
-            make.width.equalTo(14)
+            make.width.greaterThanOrEqualTo(40)
         }
-        
+        return label
     }
-    
-    private func setUpTimeSincePosted(){
-        timePassedSincePosted.textColor = UIColor.a4.silver
-        timePassedSincePosted.font = .systemFont(ofSize: 8, weight: .light).rounded
-        timePassedSincePosted.numberOfLines = 1
-        
-        contentView.addSubview(timePassedSincePosted)
-        timePassedSincePosted.snp.makeConstraints{ make in
-            make.bottom.equalToSuperview().offset(4)
-        }
-    }
-    
-    @objc private func imageTapped() {
-        onImageTapped?()
-    }
-    
 }
-
-
