@@ -1,13 +1,6 @@
-//
-//  NewIngredientViewController.swift
-//  A4
-//
-//  Created by Christopher Cheng on 12/6/24.
-//
-
 import UIKit
 
-class NewIngredientViewController: UIViewController {
+class NewIngredientViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - UI Components
     private let titleLabel = UILabel()
@@ -25,6 +18,7 @@ class NewIngredientViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        addTapGestureToImageUploadView()
     }
 
     // MARK: - Setup UI
@@ -160,6 +154,62 @@ class NewIngredientViewController: UIViewController {
         ])
         
         addButton.addTarget(self, action: #selector(addIngredient), for: .touchUpInside)
+    }
+
+    // MARK: - Image Upload Functionality
+    private func addTapGestureToImageUploadView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(uploadImageTapped))
+        imageUploadView.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func uploadImageTapped() {
+        let alertController = UIAlertController(title: "Upload Image", message: "Choose an image source", preferredStyle: .actionSheet)
+        
+        let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+            self.openImagePicker(sourceType: .camera)
+        }
+        
+        let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
+            self.openImagePicker(sourceType: .photoLibrary)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(cameraAction)
+        alertController.addAction(photoLibraryAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func openImagePicker(sourceType: UIImagePickerController.SourceType) {
+        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
+            let alert = UIAlertController(title: "Error", message: "This source type is not available on your device.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = sourceType
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    // MARK: - UIImagePickerControllerDelegate
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        if let editedImage = info[.editedImage] as? UIImage {
+            imageView.image = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            imageView.image = originalImage
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Action
