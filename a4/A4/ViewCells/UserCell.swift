@@ -38,18 +38,20 @@ class UserCell: UICollectionViewCell {
     private func setUpUserImage(){
         userImage.contentMode = .scaleAspectFill
         userImage.clipsToBounds = true
-        userImage.layer.cornerRadius = 30
+        userImage.layer.cornerRadius = 80/2
         
         contentView.addSubview(userImage)
         userImage.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.bottom.equalToSuperview().inset(15)
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
+            //make.bottom.equalToSuperview().inset(15)
+            make.height.width.equalTo(75)
         }
     }
     
     private func setUpUsername(){
-        username.textColor = UIColor.a4.white
-        username.font = .systemFont(ofSize: 10, weight: .light).rounded
+        username.textColor = UIColor.a4.black
+        username.font = .systemFont(ofSize: 12, weight: .light).rounded
         contentView.addSubview(username)
         
         username.snp.makeConstraints { make in

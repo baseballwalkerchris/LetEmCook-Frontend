@@ -41,6 +41,8 @@ class SocialEventViewController: UIViewController {
     //MARK: Properties(scroll/contentview)
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let organizerContainerView = UIView()
+    private let attendeesContainerView = UIView()
     
     //MARK: - Delegate Property
     weak var delegate: (SocialEventViewControllerDelegate)?
@@ -83,8 +85,10 @@ class SocialEventViewController: UIViewController {
         setUpDetailsWord()
         setUpDetailsText()
         setUpOrganizersWord()
+       // setUpOrganizerContainerView()
         setUpOrganizerCollectionView()
         setUpAttendeesWord()
+        //setUpAttendeesContainerView()
         setUpAttendeesCollectionView()
     }
     
@@ -151,7 +155,7 @@ class SocialEventViewController: UIViewController {
         foodImage.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
 //            make.bottom.equalToSuperview().inset(30)
-            make.height.equalTo(310)
+            make.height.equalTo(200)
         }
         
     }
@@ -314,7 +318,7 @@ class SocialEventViewController: UIViewController {
         detailsText.snp.makeConstraints{ make in
             make.leading.trailing.equalTo(goingButton).inset(8)
             make.top.equalTo(detailsWord.snp.bottom).offset(4)
-            make.bottom.equalToSuperview().inset(16) // Bottom inset for scrolling
+           // make.bottom.equalToSuperview().inset(16) // Bottom inset for scrolling
         }
     }
     
@@ -330,6 +334,19 @@ class SocialEventViewController: UIViewController {
         }
     }
     
+//    private func setUpOrganizerContainerView(){
+//        organizerContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
+//        organizerContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
+//        organizerContainerView.layer.borderWidth = 0 // Optional: For a border
+//        
+//        contentView.addSubview(organizerContainerView)
+//        organizerContainerView.snp.makeConstraints{ make in
+//            make.top.equalTo(organizersWord.snp.bottom).offset(2)
+//            make.leading.trailing.equalToSuperview().inset(16)
+//            make.height.equalTo(100) // Adjust height as needed
+//        }
+//    }
+    
     private func setUpOrganizerCollectionView(){
         let organizerLayout = UICollectionViewFlowLayout()
         organizerLayout.scrollDirection = .horizontal
@@ -344,28 +361,42 @@ class SocialEventViewController: UIViewController {
 
         contentView.addSubview(organizerCollectionView)
         organizerCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(organizersWord.snp.bottom).offset(8)
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(80) // Adjust height as needed
+            make.top.equalTo(organizersWord.snp.bottom).offset(2)
+            make.leading.trailing.equalToSuperview().inset(32)
+            make.height.equalTo(150)
         }
         
     }
     
     private func setUpAttendeesWord(){
-        attendeesWord.text = "Organizers:"
+        attendeesWord.text = "Attendees:"
         attendeesWord.textColor = UIColor.a4.black
         attendeesWord.font = .systemFont(ofSize: 24, weight: .bold).rounded
         contentView.addSubview(attendeesWord)
         
-        contentView.snp.makeConstraints{ make in
+        attendeesWord.snp.makeConstraints{ make in
             make.leading.equalTo(goingButton.snp.leading).inset(8)
-            make.top.equalTo(organizerCollectionView.snp.bottom).offset(12)
+            make.top.equalTo(organizerCollectionView.snp.bottom).offset(5)
         }
     }
     
+//    private func setUpAttendeesContainerView(){
+//        attendeesContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
+//        attendeesContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
+//        attendeesContainerView.layer.borderWidth = 0 // Optional: For a border
+//        
+//        contentView.addSubview(attendeesContainerView)
+//        attendeesContainerView.snp.makeConstraints{ make in
+//            make.top.equalTo(attendeesWord.snp.bottom).offset(16)
+//            make.leading.trailing.equalToSuperview()
+//            make.height.equalTo(120) // Adjust height for proper scrolling
+//            make.bottom.equalToSuperview()
+//        }
+//    }
+    
     private func setUpAttendeesCollectionView(){
         let attendeesLayout = UICollectionViewFlowLayout()
-        attendeesLayout.scrollDirection = .vertical
+        //attendeesLayout.scrollDirection = .vertical
         attendeesLayout.minimumLineSpacing = 8
         attendeesLayout.itemSize = CGSize(width: 60, height: 80)
 
@@ -377,10 +408,10 @@ class SocialEventViewController: UIViewController {
 
         contentView.addSubview(attendeesCollectionView)
         attendeesCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(organizerCollectionView.snp.bottom).offset(16)
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(16) // For scrollable content
-            make.height.equalTo(300) // Adjust for grid display
+            make.top.equalTo(attendeesWord.snp.bottom).offset(-2)
+            make.leading.trailing.equalToSuperview().inset(32)
+            make.height.equalTo(300) // Adjust height for proper scrolling
+            make.bottom.equalToSuperview()
         }
     }
 }
@@ -389,17 +420,30 @@ extension SocialEventViewController: UICollectionViewDataSource{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // One section for "Create Post" and the other for posts
-        return 2
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? 1 : attendees.count
+        if collectionView == organizerCollectionView {
+               return organizers.count
+        } else {
+               return attendees.count
+        }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.section == 0 {
+//        if indexPath.section == 0 {
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCell.reuse, for: indexPath) as! UserCell
+//            cell.configure(user: organizers[indexPath.item])
+//            return cell
+//        } else {
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCell.reuse, for: indexPath) as! UserCell
+//            cell.configure(user: attendees[indexPath.item])
+//            return cell
+//        }
+        if collectionView == organizerCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCell.reuse, for: indexPath) as! UserCell
             cell.configure(user: organizers[indexPath.item])
             return cell
@@ -409,6 +453,7 @@ extension SocialEventViewController: UICollectionViewDataSource{
             return cell
         }
     }
+
 }
     //MARK: UICollectionViewDelegate
     extension SocialEventViewController: UICollectionViewDelegate {
@@ -418,18 +463,16 @@ extension SocialEventViewController: UICollectionViewDataSource{
     // MARK: - UICollectionViewDelegateFlowLayout [PART II]
 
 extension SocialEventViewController: UICollectionViewDelegateFlowLayout {
-        
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-                return UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
-            }
-        
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            
-            if indexPath.section == 0 {
-                return CGSize(width: collectionView.frame.width, height: 50) // Height for "Create Post" cell
-            }
-            else {
-                return CGSize(width: collectionView.frame.width, height: 50) // Height for each post cell
-            }
-        }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let padding: CGFloat = 16
+        let availableWidth = collectionView.frame.width - padding * 3
+        let cellWidth = availableWidth / 4
+        return CGSize(width: cellWidth, height: 100)
+    }
+}
