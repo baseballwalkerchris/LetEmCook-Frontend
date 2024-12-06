@@ -146,38 +146,70 @@ class NetworkManager {
     
     
     func createEvent(
-        userId: String, title: String, imageUrl: String, description: String,
-        location: String, capacity: String, date: Date, completion: @escaping (Event) -> Void) {
+        userId: Int, title: String, imageUrl: String, description: String,
+        location: String, capacity: Int, date: Date, completion: @escaping (Event) -> Void) {
             
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-        
-        let endpoint: String = "\(devEndpoint)/users/1/stories/"
-        
             
+        let endpoint: String = "\(devEndpoint)/users/1/events/"
         
         let parameters: Parameters = [
             "user_id": userId,
             "title": title,
             "image_url": imageUrl,
-            "description": description,
+            "caption": description,
             "location": location,
-            "capacity": capacity,
-            "date": date
+            "number_going": capacity
+//            "time": date
         ]
                     
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
-            .responseDecodable(of: Event.self, decoder: decoder) { response in
+            .responseDecodable(of: EventResponse.self, decoder: decoder) { response in
                 switch response.result {
-                case .success(let event):
-                    print("Successfully added recipe with ID: \(event.id)")
-                    completion(event)
+                case .success(let eventResponse):
+                    print("Successfully added event with ID: \(eventResponse.data.id)")
+                    completion(eventResponse.data)
                 case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
                     print("Error in NetworkManager.createEvent: \(error.localizedDescription)")
                     print("No response data")
                 }
             }
     }
+    
+    func fetchEvents(completion: @escaping ([Event]) -> Void) {
+        // Specify the endpoint
+        let endpoint = "\(devEndpoint)/events/"
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        // Create the request
+        AF.request(endpoint, method: .get)
+            .validate()
+            .responseDecodable(of: FetchEventResponse.self, decoder: decoder) { response in
+                // Handle the response
+                switch response.result {
+                case .success(let eventResponse):
+                    print("Successfully fetched \(eventResponse.data.events.count) events")
+                    completion(eventResponse.data.events)
+                case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
+                    print("Error in NetworkManager.fetchEvents: \(error.localizedDescription)")
+                }
+            }
+    }
+
+    
 }

@@ -14,14 +14,27 @@
 
 import Foundation
 
+struct EventResponse: Codable {
+    let success: Bool
+    let data: Event
+}
+
+struct FetchEventResponse: Decodable {
+    let success: Bool
+    let data: EventData
+}
+
+struct EventData: Decodable {
+    let events: [Event]
+}
+
 struct Event: Codable {
     let id: Int
-    let userId: String
+    let userId: Int
     let title: String
     let imageUrl: String
-    let description: String
+    let caption: String
     let location: String
-    let capacity: String
-    let date: Date
+    let numberGoing: Int
     let createdAt: Date
 }

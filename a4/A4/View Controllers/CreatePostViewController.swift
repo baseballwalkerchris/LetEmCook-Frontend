@@ -1130,12 +1130,12 @@ class CreatePostViewController: UIViewController {
     // MARK: createEvent
 
     @objc private func createEvent() {
-        let userId = "cdc236"
+        let userId = 0
         let title = eventTitleTextView.text ?? ""
         let imageUrl = "placeholder"
         let description = eventDescriptionTextView.text ?? ""
         let location = eventLocationTextView.text ?? ""
-        let capacity = numberOfAttendeesTextView.text ?? ""
+        let capacity = Int(numberOfAttendeesTextView.text ?? "") ?? 4
         let date = datePicker.date
         
         NetworkManager.shared.createEvent(userId: userId, title: title, imageUrl: imageUrl, description: description, location: location, capacity: capacity, date: date) {

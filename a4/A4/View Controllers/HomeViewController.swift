@@ -9,6 +9,7 @@ class HomeViewController: UIViewController {
     private let segmentedControl = UISegmentedControl(items: ["Stories", "Recipes", "Events"])
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let headerTitleLabel = UILabel()
 
     private var storiesCollectionView: UICollectionView!
     private var recipesCollectionView: UICollectionView!
@@ -31,38 +32,45 @@ class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - ViewDidLoad
+    // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = UIColor.a4.offWhite
-//        title = "My Feed"
-        
+
         setupHeaderView()
-//        setupLogoView()
+        setupLogoView()
+        setupHeaderTitleLabel()
         setupSegmentedView()
         setupScrollView()
         setupContentView()
         setupStoriesCollectionView()
         setupRecipesCollectionView()
         setupEventsCollectionView()
-        
+
         // Hide other collection views initially
         recipesCollectionView.isHidden = true
         eventsCollectionView.isHidden = true
-        
+
+        // Fetch stories
         NetworkManager.shared.fetchStories { [weak self] fetchedStories in
             DispatchQueue.main.async {
                 self?.stories = fetchedStories
                 self?.storiesCollectionView.reloadData()
             }
         }
-        // Load mock data for events
-        loadMockEvents()
+
+        // Fetch events
+        NetworkManager.shared.fetchEvents { [weak self] fetchedEvents in
+            DispatchQueue.main.async {
+                self?.events = fetchedEvents
+                self?.eventsCollectionView.reloadData()
+            }
+        }
+
+        // Load mock recipes
         loadMockRecipes()
-//        loadMockStories()
     }
-    
     // MARK: - Set up views
     
     private func setupHeaderView() {
@@ -204,12 +212,42 @@ class HomeViewController: UIViewController {
         ])
     }
     
+    private func setupLogoView() {
+        logoView.image = UIImage(named: "logo")
+        logoView.contentMode = .scaleAspectFit
+        
+        headerView.addSubview(logoView)
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            logoView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10),
+            logoView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 20),
+            logoView.heightAnchor.constraint(equalToConstant: 70), // Adjust the height as needed
+            logoView.widthAnchor.constraint(equalToConstant: 70) // Adjust the width as needed
+        ])
+    }
+    
+    private func setupHeaderTitleLabel() {
+        headerTitleLabel.text = "My Feed"
+        headerTitleLabel.textColor = .white
+        headerTitleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold) // Adjust font size and weight as needed
+        headerTitleLabel.textAlignment = .center
+        
+        headerView.addSubview(headerTitleLabel)
+        headerTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            headerTitleLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            headerTitleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 30)
+        ])
+    }
+    
     private func loadMockEvents() {
-        // Create mock events for testing
+        // Create mock events for testingd
         events = [
-            Event(id: 1, userId: "user1", title: "Event 1", imageUrl: "https://example.com/image1.jpg", description: "Description 1", location: "Location 1", capacity: "50", date: Date(), createdAt: Date()),
-            Event(id: 2, userId: "user2", title: "Event 2", imageUrl: "https://example.com/image2.jpg", description: "Description 2", location: "Location 2", capacity: "100", date: Date(), createdAt: Date()),
-            Event(id: 3, userId: "user3", title: "Event 3", imageUrl: "https://example.com/image3.jpg", description: "Description 3", location: "Location 3", capacity: "100", date: Date(), createdAt: Date())
+//            Event(id: 1, userId: "user1", title: "Event 1", imageUrl: "https://example.com/image1.jpg", description: "Description 1", location: "Location 1", capacity: 50, date: Date(), createdAt: Date()),
+//            Event(id: 2, userId: "user2", title: "Event 2", imageUrl: "https://example.com/image2.jpg", description: "Description 2", location: "Location 2", capacity: 100, date: Date(), createdAt: Date()),
+//            Event(id: 3, userId: "user3", title: "Event 3", imageUrl: "https://example.com/image3.jpg", description: "Description 3", location: "Location 3", capacity: 100, date: Date(), createdAt: Date())
         ]
         eventsCollectionView.reloadData()
     }

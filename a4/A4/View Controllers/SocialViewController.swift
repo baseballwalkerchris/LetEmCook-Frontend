@@ -109,7 +109,7 @@ class SocialEventViewController: UIViewController {
         author.text = "By \(event.userId)"
         dayText.text = "placeholder"
         locationText.text = event.location
-        detailsText.text = event.description
+        detailsText.text = event.caption
         super.init(nibName: nil, bundle: nil)
     }
     

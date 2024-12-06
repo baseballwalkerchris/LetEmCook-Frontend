@@ -81,7 +81,7 @@ class EventViewCell: UICollectionViewCell {
         author.text = "From \(event.userId)"
         
         // Set attendees' capacity
-        attendeesLabel.text = "\(event.capacity) attendees"
+        attendeesLabel.text = "\(event.numberGoing) attendees"
 
         // Assign location
         locationLabel.text = event.location
@@ -89,10 +89,11 @@ class EventViewCell: UICollectionViewCell {
         // Format and assign the event date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" // Example: Dec 12, 2024 5:30 PM
-        timeLabel.text = dateFormatter.string(from: event.date)
+//        timeLabel.text = dateFormatter.string(from: event.date)
+        timeLabel.text = "placeholder date"
 
         // Assign event description
-        descriptionMessage.text = event.description
+        descriptionMessage.text = event.caption
     }
     
     //MARK: Set up functions
