@@ -89,7 +89,8 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.a4.offWhite
 
-        setupCustomHeaderView()setupTopProfileContainer()
+        setupCustomHeaderView()
+        setupTopProfileContainer()
         setupTabBar()
         setUpFridgeScrollView()
         setUpProfileImage()
@@ -131,6 +132,10 @@ class ProfileViewController: UIViewController {
         view.addSubview(tabBar)
         
         tabBar.selectedSegmentIndex = 0
+        tabBar.backgroundColor = .white
+        tabBar.selectedSegmentTintColor = UIColor.systemBlue.withAlphaComponent(0.4)
+        tabBar.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        tabBar.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .normal)
         tabBar.addTarget(self, action: #selector(tabBarChanged(_:)), for: .valueChanged)
         
         tabBar.snp.makeConstraints { make in

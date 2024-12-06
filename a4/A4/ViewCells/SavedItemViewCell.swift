@@ -11,6 +11,7 @@ class SavedItemCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private let bookmarkImage = UIImageView()
+    private let trashButton = UIButton()
     static let reuse = "SavedItemCellReuse"
 
     override init(frame: CGRect) {
@@ -35,6 +36,9 @@ class SavedItemCell: UICollectionViewCell {
         
         bookmarkImage.image = UIImage(named: "bookmarked")
         addSubview(bookmarkImage)
+        
+        trashButton.setImage(UIImage(named: "trash"), for: .normal)
+        addSubview(trashButton)
 
         imageView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
@@ -43,12 +47,19 @@ class SavedItemCell: UICollectionViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(imageView.snp.leading).inset(8)
-            make.centerY.equalToSuperview()
+            make.bottom.equalToSuperview().inset(8)
         }
         
         bookmarkImage.snp.makeConstraints{ make in
-            make.width.height.equalTo(20)
+            make.height.equalTo(20)
+            make.width.equalTo(15)
             make.trailing.top.equalToSuperview().inset(8)
+        }
+        
+        trashButton.snp.makeConstraints { make in
+            make.height.equalTo(20)
+            make.width.equalTo(15)
+            make.trailing.bottom.equalToSuperview().inset(8)
         }
     }
 
