@@ -11,6 +11,7 @@ import SnapKit
 class ProfileViewController: UIViewController {
     
     //MARK: properties, views
+    private let customHeaderView = CustomHeaderView()
     private let fridgeScrollView = UIScrollView()
     private let fridgeContentView = UIView()
     
@@ -65,7 +66,7 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.a4.offWhite
 
-        
+        setupCustomHeaderView()
         setUpFridgeScrollView()
         setUpTopProfileContainerView()
         setUpProfileImage()
@@ -81,6 +82,19 @@ class ProfileViewController: UIViewController {
     }
     
     //MARK: set up functions
+    
+    private func setupCustomHeaderView() {
+        view.addSubview(customHeaderView)
+        customHeaderView.titleLabel.text = "My Profile"
+        customHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            customHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            customHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customHeaderView.heightAnchor.constraint(equalToConstant: 130) // Adjust height as needed
+        ])
+    }
     
     private func setupTabBar() {
         view.addSubview(tabBar)

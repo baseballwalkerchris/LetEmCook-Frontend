@@ -10,6 +10,7 @@ import UIKit
 class CreatePostViewController: UIViewController {
     
     // MARK: - Properties (view)
+    let customHeaderView = CustomHeaderView()
     let segmentedControl = UISegmentedControl(items: ["Story", "Recipe", "Event"])
     
     // Properties for stories
@@ -83,9 +84,9 @@ class CreatePostViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "New Post"
         view.backgroundColor = UIColor.a4.offWhite
         
+        setupCustomHeaderView()
         setupSegmentedControl()
         
         // Story views
@@ -146,6 +147,20 @@ class CreatePostViewController: UIViewController {
     }
     
     // MARK: - Setup Views
+    
+    private func setupCustomHeaderView() {
+        view.addSubview(customHeaderView)
+        customHeaderView.titleLabel.text = "New Post"
+        customHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            customHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            customHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customHeaderView.heightAnchor.constraint(equalToConstant: 130) // Adjust height as needed
+        ])
+    }
+
     
     private func setupSegmentedControl() {
         segmentedControl.selectedSegmentIndex = 0 // Default to "Story"

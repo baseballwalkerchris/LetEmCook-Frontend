@@ -5,6 +5,7 @@ class HomescreenViewController: UIViewController {
     // MARK: - Properties
     
     private let headerView = UIView()
+    private let customHeaderView = CustomHeaderView()
     private let logoView = UIImageView()
     private let segmentedControl = UISegmentedControl(items: ["Stories", "Recipes", "Events"])
     private let scrollView = UIScrollView()
@@ -38,7 +39,8 @@ class HomescreenViewController: UIViewController {
 
         view.backgroundColor = UIColor.a4.offWhite
 
-        setupHeaderView()
+//        setupHeaderView()
+        setupCustomHeaderView()
         setupLogoView()
         setupHeaderTitleLabel()
         setupSegmentedView()
@@ -73,16 +75,16 @@ class HomescreenViewController: UIViewController {
     }
     // MARK: - Set up views
     
-    private func setupHeaderView() {
-        headerView.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.4)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headerView)
+    private func setupCustomHeaderView() {
+        view.addSubview(customHeaderView)
+        customHeaderView.titleLabel.text = "My Feed"
+        customHeaderView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 130) // Adjust height as needed
+            customHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            customHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customHeaderView.heightAnchor.constraint(equalToConstant: 130) // Adjust height as needed
         ])
     }
     
