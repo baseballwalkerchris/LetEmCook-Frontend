@@ -15,7 +15,7 @@
 //MARK: conform with backend, temp data for now
 import Foundation
 
-struct SocialEventPost: Codable {
+struct Event: Codable {
     // TODO: Create a Post Struct here
     let eventName: String
     let author: String

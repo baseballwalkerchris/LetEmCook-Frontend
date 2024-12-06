@@ -67,7 +67,7 @@ class SocialEventViewCell: UICollectionViewCell {
     }
     
     //MARK: - Configure, TO DO
-    func socialConfigure(socialEvent: SocialEventPost){
+    func socialConfigure(socialEvent: Event){
         //setupimage
         let recipeImageUrl = URL(string: socialEvent.imageURL)
         foodImage.sd_setImage(with: recipeImageUrl)

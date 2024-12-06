@@ -26,8 +26,8 @@ class HomescreenViewController: UIViewController {
 //        Recipe(userId: "john2134", description: "delicious meal can't complain", imageUrl: "https://www.allrecipes.com/thmb/cLLmeWO7j9YYI66vL3eZzUL_NKQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/7501402crockpot-italian-chicken-recipe-fabeveryday4x3-223051c7188841cb8fd7189958c62f3d.jpg", time: Date())
     ]
     
-    private var socialPosts: [SocialEventPost] = [
-        SocialEventPost(eventName: "Taco Tuesday", author: "aidan j", maxCount: 15, date: "5:30pm on 12/2/2024", location: "Collegetown Crossings", descriptionOfEvent: "Come over to my apartment to make tacos and watch movies. Try to come with some drinks and movie recs", currentAttendees: 4, imageURL: "https://www.allrecipes.com/thmb/neJT4JLJz7ks8D0Rkvzf8fRufWY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/6900-dumplings-DDMFS-4x3-c03fe714205d4f24bd74b99768142864.jpg")
+    private var socialPosts: [Event] = [
+        Event(eventName: "Taco Tuesday", author: "aidan j", maxCount: 15, date: "5:30pm on 12/2/2024", location: "Collegetown Crossings", descriptionOfEvent: "Come over to my apartment to make tacos and watch movies. Try to come with some drinks and movie recs", currentAttendees: 4, imageURL: "https://www.allrecipes.com/thmb/neJT4JLJz7ks8D0Rkvzf8fRufWY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/6900-dumplings-DDMFS-4x3-c03fe714205d4f24bd74b99768142864.jpg")
     ]
     
     //MARK: - ViewDidLoad

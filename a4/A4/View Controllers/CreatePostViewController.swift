@@ -48,6 +48,23 @@ class CreatePostViewController: UIViewController {
 
     // Properties for events
     let eventScrollView = UIScrollView()
+    let eventContentView = UIView()
+    let eventTitleLabel = UILabel()
+    let eventTitleTextView = UITextView()
+    let eventUploadImageLabel = UILabel()
+    let eventUploadImageView = UIView()
+    let eventUploadImageButton = UIButton()
+    let eventSelectedImageView = UIImageView()
+    let eventDescriptionLabel = UILabel()
+    let eventDescriptionTextView = UITextView()
+    let eventLocationLabel = UILabel()
+    let eventLocationTextView = UITextView()
+    let numberOfAttendeesLabel = UILabel()
+    let numberOfAttendeesTextView = UITextView()
+    let chooseADateLabel = UILabel()
+    let datePicker = UIDatePicker()
+    let selectedDateLabel = UILabel()
+    let eventPublishButton = UIButton()
     
     // MARK: properties (data)
     // Data for pickers
@@ -106,6 +123,24 @@ class CreatePostViewController: UIViewController {
 
         // Event views
         setupEventScrollView()
+        setupEventContentView()
+        setupEventTitleLabel()
+        setupEventTitleTextView()
+        setupEventUploadImageLabel()
+        setupEventUploadImageView()
+        setupEventUploadImageButton()
+        setupEventSelectedImageView()
+        setupEventDescriptionLabel()
+        setupEventDescriptionTextView()
+        setupEventLocationLabel()
+        setupEventLocationTextView()
+        setupNumberOfAttendeesLabel()
+        setupNumberOfAttendeesTextView()
+        setupChooseADateLabel()
+        setupDatePicker()
+        setupSelectedDateLabel()
+        setupEventPublishButton()
+        
         
         segmentChanged(segmentedControl) // Show initial view
     }
@@ -537,7 +572,6 @@ class CreatePostViewController: UIViewController {
         recipeDescriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
         recipeContentView.addSubview(recipeDescriptionTextView)
-//        recipeContentView.backgroundColor = .red
         recipeDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -665,7 +699,6 @@ class CreatePostViewController: UIViewController {
             addDirectionButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
             addDirectionButton.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
             addDirectionButton.heightAnchor.constraint(equalToConstant: 50),
-//            addDirectionButton.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
         ])
     }
 
@@ -721,13 +754,13 @@ class CreatePostViewController: UIViewController {
         recipePublishButton.translatesAutoresizingMaskIntoConstraints = false
         recipeContentView.addSubview(recipePublishButton)
         
-            NSLayoutConstraint.activate([
-                recipePublishButton.topAnchor.constraint(equalTo: addDirectionButton.bottomAnchor, constant: 20),
-                recipePublishButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
-                recipePublishButton.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
-                recipePublishButton.heightAnchor.constraint(equalToConstant: 50),
-                recipePublishButton.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
-            ])
+        NSLayoutConstraint.activate([
+            recipePublishButton.topAnchor.constraint(equalTo: addDirectionButton.bottomAnchor, constant: 20),
+            recipePublishButton.leadingAnchor.constraint(equalTo: recipeContentView.leadingAnchor, constant: 20),
+            recipePublishButton.trailingAnchor.constraint(equalTo: recipeContentView.trailingAnchor, constant: -20),
+            recipePublishButton.heightAnchor.constraint(equalToConstant: 50),
+            recipePublishButton.bottomAnchor.constraint(equalTo: recipeContentView.bottomAnchor, constant: -20)
+        ])
 
     }
     
@@ -763,7 +796,6 @@ class CreatePostViewController: UIViewController {
                    let directionText = textField.text, !directionText.isEmpty {
                     let direction = Direction(
                         stepNumber: index + 1,
-                        title: "Step \(index + 1)",
                         description: directionText,
                         isCompleted: false // Default to false
                     )
@@ -773,21 +805,6 @@ class CreatePostViewController: UIViewController {
         }
         
         return directions
-    }
-    
-    // MARK: Event ScrollView
-    
-    private func setupEventScrollView() {
-        eventScrollView.isHidden = true
-        view.addSubview(eventScrollView)
-        eventScrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            eventScrollView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
-            eventScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            eventScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            eventScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
     }
     
     @objc private func uploadImageTapped() {
@@ -804,6 +821,310 @@ class CreatePostViewController: UIViewController {
           actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
           
           present(actionSheet, animated: true)
+    }
+
+    
+    // MARK: Event ScrollView
+    
+    private func setupEventScrollView() {
+        eventScrollView.isHidden = true
+        view.addSubview(eventScrollView)
+        eventScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventScrollView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
+            eventScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            eventScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            eventScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    
+    private func setupEventContentView() {
+        eventScrollView.addSubview(eventContentView)
+        eventContentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventContentView.topAnchor.constraint(equalTo: eventScrollView.topAnchor),
+            eventContentView.leadingAnchor.constraint(equalTo: eventScrollView.leadingAnchor),
+            eventContentView.trailingAnchor.constraint(equalTo: eventScrollView.trailingAnchor),
+            eventContentView.bottomAnchor.constraint(equalTo: eventScrollView.bottomAnchor),
+            eventContentView.widthAnchor.constraint(equalTo: eventScrollView.widthAnchor)
+        ])
+    }
+    
+    private func setupEventTitleLabel() {
+        eventTitleLabel.text = "Title"
+        eventTitleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(eventTitleLabel)
+        eventTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventTitleLabel.topAnchor.constraint(equalTo: eventContentView.topAnchor, constant: 10),
+            eventTitleLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventTitleLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupEventTitleTextView() {
+        eventTitleTextView.layer.borderWidth = 1
+        eventTitleTextView.layer.borderColor = UIColor.systemGray.cgColor
+        eventTitleTextView.layer.cornerRadius = 10
+        eventTitleTextView.font = .systemFont(ofSize: 16)
+        eventTitleTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        eventContentView.addSubview(eventTitleTextView)
+        eventTitleTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventTitleTextView.topAnchor.constraint(equalTo: eventTitleLabel.bottomAnchor, constant: 10),
+            eventTitleTextView.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventTitleTextView.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            eventTitleTextView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+    }
+    
+    
+    private func setupEventUploadImageLabel() {
+        eventUploadImageLabel.text = "Image"
+        eventUploadImageLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(eventUploadImageLabel)
+        eventUploadImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventUploadImageLabel.topAnchor.constraint(equalTo: eventTitleTextView.bottomAnchor, constant: 20),
+            eventUploadImageLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventUploadImageLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupEventUploadImageView() {
+        eventUploadImageView.layer.borderWidth = 1
+        eventUploadImageView.layer.borderColor = UIColor.systemGray.cgColor
+        eventUploadImageView.layer.cornerRadius = 10
+        eventUploadImageView.layer.masksToBounds = true
+        eventUploadImageView.backgroundColor = .systemGray6
+        
+        eventContentView.addSubview(eventUploadImageView)
+        eventUploadImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventUploadImageView.topAnchor.constraint(equalTo: eventUploadImageLabel.bottomAnchor, constant: 10),
+            eventUploadImageView.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventUploadImageView.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            eventUploadImageView.heightAnchor.constraint(equalToConstant: 150),
+        ])
+    }
+
+    private func setupEventUploadImageButton() {
+        eventUploadImageButton.setTitle("Upload Image", for: .normal)
+        eventUploadImageButton.setTitleColor(.systemBlue, for: .normal)
+        eventUploadImageButton.addTarget(self, action: #selector(uploadImageTapped), for: .touchUpInside)
+        
+        eventUploadImageView.addSubview(eventUploadImageButton)
+        eventUploadImageButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventUploadImageButton.bottomAnchor.constraint(equalTo: eventUploadImageView.bottomAnchor, constant: -10),
+            eventUploadImageButton.centerXAnchor.constraint(equalTo: eventUploadImageView.centerXAnchor)
+        ])
+    }
+    
+    private func setupEventSelectedImageView() {
+        eventSelectedImageView.contentMode = .scaleAspectFit
+        eventSelectedImageView.clipsToBounds = true
+        
+        eventUploadImageView.addSubview(eventSelectedImageView)
+        eventSelectedImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventSelectedImageView.topAnchor.constraint(equalTo: eventUploadImageView.topAnchor, constant: 10),
+            eventSelectedImageView.leadingAnchor.constraint(equalTo: eventUploadImageView.leadingAnchor, constant: 10),
+            eventSelectedImageView.trailingAnchor.constraint(equalTo: eventUploadImageView.trailingAnchor, constant: -10),
+            eventSelectedImageView.bottomAnchor.constraint(equalTo: eventUploadImageButton.topAnchor, constant: -10),
+        ])
+    }
+    
+    private func setupEventDescriptionLabel() {
+        eventDescriptionLabel.text = "Tell us about your event!"
+        eventDescriptionLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(eventDescriptionLabel)
+        eventDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventDescriptionLabel.topAnchor.constraint(equalTo: eventUploadImageView.bottomAnchor, constant: 20),
+            eventDescriptionLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventDescriptionLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupEventDescriptionTextView() {
+        eventDescriptionTextView.layer.borderWidth = 1
+        eventDescriptionTextView.layer.borderColor = UIColor.systemGray.cgColor
+        eventDescriptionTextView.layer.cornerRadius = 10
+        eventDescriptionTextView.font = .systemFont(ofSize: 16)
+        eventDescriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        eventContentView.addSubview(eventDescriptionTextView)
+        eventDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventDescriptionTextView.topAnchor.constraint(equalTo: eventDescriptionLabel.bottomAnchor, constant: 10),
+            eventDescriptionTextView.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventDescriptionTextView.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            eventDescriptionTextView.heightAnchor.constraint(equalToConstant: 100),
+        ])
+    }
+    
+    private func setupEventLocationLabel() {
+        eventLocationLabel.text = "Location"
+        eventLocationLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(eventLocationLabel)
+        eventLocationLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventLocationLabel.topAnchor.constraint(equalTo: eventDescriptionTextView.bottomAnchor, constant: 20),
+            eventLocationLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventLocationLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupEventLocationTextView() {
+        eventLocationTextView.layer.borderWidth = 1
+        eventLocationTextView.layer.borderColor = UIColor.systemGray.cgColor
+        eventLocationTextView.layer.cornerRadius = 10
+        eventLocationTextView.font = .systemFont(ofSize: 16)
+        eventLocationTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        eventContentView.addSubview(eventLocationTextView)
+        eventLocationTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            eventLocationTextView.topAnchor.constraint(equalTo: eventLocationLabel.bottomAnchor, constant: 10),
+            eventLocationTextView.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventLocationTextView.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            eventLocationTextView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+    }
+    
+    private func setupNumberOfAttendeesLabel() {
+        numberOfAttendeesLabel.text = "How many people can come?"
+        numberOfAttendeesLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(numberOfAttendeesLabel)
+        numberOfAttendeesLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            numberOfAttendeesLabel.topAnchor.constraint(equalTo: eventLocationTextView.bottomAnchor, constant: 20),
+            numberOfAttendeesLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            numberOfAttendeesLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupNumberOfAttendeesTextView() {
+        numberOfAttendeesTextView.layer.borderWidth = 1
+        numberOfAttendeesTextView.layer.borderColor = UIColor.systemGray.cgColor
+        numberOfAttendeesTextView.layer.cornerRadius = 10
+        numberOfAttendeesTextView.font = .systemFont(ofSize: 16)
+        numberOfAttendeesTextView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        eventContentView.addSubview(numberOfAttendeesTextView)
+        numberOfAttendeesTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            numberOfAttendeesTextView.topAnchor.constraint(equalTo: numberOfAttendeesLabel.bottomAnchor, constant: 10),
+            numberOfAttendeesTextView.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            numberOfAttendeesTextView.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            numberOfAttendeesTextView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+    }
+    
+    private func setupChooseADateLabel() {
+        chooseADateLabel.text = "When is the event?"
+        chooseADateLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        
+        eventContentView.addSubview(chooseADateLabel)
+        chooseADateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            chooseADateLabel.topAnchor.constraint(equalTo: numberOfAttendeesTextView.bottomAnchor, constant: 20),
+            chooseADateLabel.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            chooseADateLabel.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+        ])
+    }
+    
+    private func setupDatePicker() {
+        // Configure the date picker mode (date, time, or both)
+        datePicker.datePickerMode = .dateAndTime
+        if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        } else {
+            // Fallback on earlier versions
+        } // Use .inline for modern appearance (iOS 14+)
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let oneYearFromNow = calendar.date(byAdding: .year, value: 1, to: currentDate)
+        datePicker.minimumDate = currentDate
+        datePicker.maximumDate = oneYearFromNow
+
+        // Add target for value change
+        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        
+        eventContentView.addSubview(datePicker)
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            datePicker.centerXAnchor.constraint(equalTo: eventContentView.centerXAnchor),
+            datePicker.topAnchor.constraint(equalTo: chooseADateLabel.bottomAnchor, constant: 10),
+            datePicker.widthAnchor.constraint(equalTo: eventContentView.widthAnchor, multiplier: 0.9),
+            datePicker.heightAnchor.constraint(equalToConstant: 150)
+        ])
+    }
+            
+    @objc private func dateChanged(_ sender: UIDatePicker) {
+        // Format the selected date and display it in the label
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        selectedDateLabel.text = "Selected Date: \(formatter.string(from: sender.date))"
+    }
+    
+    private func setupSelectedDateLabel() {
+        selectedDateLabel.text = "Selected Date: None"
+        selectedDateLabel.textAlignment = .center
+        selectedDateLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        eventContentView.addSubview(selectedDateLabel)
+        selectedDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            selectedDateLabel.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 20),
+            selectedDateLabel.centerXAnchor.constraint(equalTo: eventContentView.centerXAnchor),
+        ])
+    }
+
+    private func setupEventPublishButton() {
+        eventPublishButton.layer.cornerRadius = 20
+        eventPublishButton.backgroundColor = .systemBlue
+        eventPublishButton.setTitle("Publish", for: .normal)
+        eventPublishButton.setTitleColor(.white, for: .normal)
+        eventPublishButton.setTitleColor(.systemGreen, for: .highlighted)
+        eventPublishButton.titleLabel?.font = .systemFont(ofSize: 16)
+        eventPublishButton.addTarget(self, action: #selector(createRecipe), for: .touchUpInside)
+        
+        eventPublishButton.translatesAutoresizingMaskIntoConstraints = false
+        eventContentView.addSubview(eventPublishButton)
+        
+        NSLayoutConstraint.activate([
+            eventPublishButton.topAnchor.constraint(equalTo: selectedDateLabel.bottomAnchor, constant: 20),
+            eventPublishButton.leadingAnchor.constraint(equalTo: eventContentView.leadingAnchor, constant: 20),
+            eventPublishButton.trailingAnchor.constraint(equalTo: eventContentView.trailingAnchor, constant: -20),
+            eventPublishButton.heightAnchor.constraint(equalToConstant: 50),
+            eventPublishButton.bottomAnchor.constraint(equalTo: eventContentView.bottomAnchor, constant: -20)
+        ])
     }
 }
 
@@ -856,7 +1177,7 @@ extension CreatePostViewController: UIPickerViewDelegate {
             case 1:
                 recipeSelectedImageView.image = selectedImage
             case 2:
-                break
+                eventSelectedImageView.image = selectedImage
             default:
                 break
             }

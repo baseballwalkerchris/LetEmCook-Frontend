@@ -94,9 +94,7 @@ class NetworkManager {
             "ingredients": ingredients,
             "directions": directions
         ]
-            
-        print(parameters)
-        
+                    
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()

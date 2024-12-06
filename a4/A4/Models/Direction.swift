@@ -8,9 +8,8 @@
 // MARK: Conform with backend
 import Foundation
 
-struct Direction {
+public struct Direction: Codable {
     let stepNumber: Int
-    let title: String
     let description: String
     var isCompleted: Bool
 }

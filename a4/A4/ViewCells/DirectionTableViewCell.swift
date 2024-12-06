@@ -25,7 +25,6 @@ class DirectionTableViewCell: UITableViewCell {
         contentView.backgroundColor = UIColor.a4.offWhite
         
         setupStepButton()
-        setupTitleLabel()
         setupDescriptionLabel()
     }
     
@@ -34,10 +33,9 @@ class DirectionTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configure cell function
-    func configure(stepNumber: Int, title: String, description: String, isCompleted: Bool) {
+    func configure(stepNumber: Int, description: String, isCompleted: Bool) {
         stepButton.setTitle(isCompleted ? "✓" : "\(stepNumber)", for: .normal)
         stepButton.backgroundColor = isCompleted ? .systemGreen : .systemBlue
-        titleLabel.text = title
         descriptionLabel.text = description
     }
     
@@ -61,19 +59,7 @@ class DirectionTableViewCell: UITableViewCell {
             stepButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
-    
-    private func setupTitleLabel() {
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        
-        contentView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: stepButton.trailingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            titleLabel.topAnchor.constraint(equalTo: stepButton.topAnchor)
-        ])
-    }
+
     
     private func setupDescriptionLabel() {
         descriptionLabel.font = UIFont.systemFont(ofSize: 14)
@@ -83,9 +69,9 @@ class DirectionTableViewCell: UITableViewCell {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }

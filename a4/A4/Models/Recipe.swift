@@ -18,6 +18,6 @@ struct Recipe: Codable {
     let ratings: String
     let description: String
     let ingredients: [Ingredient]
-    let directions: [String]
+    let directions: [Direction]
     let createdAt: Date
 }
