@@ -131,4 +131,50 @@ class NetworkManager {
                 }
             }
     }
+    
+    struct Event: Codable {
+        let id: Int
+        let userId: String
+        let title: String
+        let imageUrl: String
+        let description: String
+        let location: String
+        let capacity: String
+        let date: Date
+        let createdAt: Date
+    }
+    
+    func createEvent(
+        userId: String, title: String, imageUrl: String, description: String,
+        location: String, capacity: String, date: Date, completion: @escaping (Event) -> Void) {
+            
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        
+        let endpoint: String = "\(devEndpoint)/users/1/stories/"
+        
+        let parameters: Parameters = [
+            "user_id": userId,
+            "title": title,
+            "image_url": imageUrl,
+            "description": description,
+            "location": location,
+            "capacity": capacity,
+            "date": date
+        ]
+                    
+
+        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate()
+            .responseDecodable(of: Event.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let event):
+                    print("Successfully added recipe with ID: \(event.id)")
+                    completion(event)
+                case .failure(let error):
+                    print("Error in NetworkManager.createEvent: \(error.localizedDescription)")
+                    print("No response data")
+                }
+            }
+    }
 }

@@ -12,17 +12,16 @@
 //  Created by Aidan Joseph on 11/25/24.
 //
 
-//MARK: conform with backend, temp data for now
 import Foundation
 
 struct Event: Codable {
-    // TODO: Create a Post Struct here
-    let eventName: String
-    let author: String
-    let maxCount: Int
-    let date: String
+    let id: Int
+    let userId: String
+    let title: String
+    let imageUrl: String
+    let description: String
     let location: String
-    let descriptionOfEvent: String
-    let currentAttendees: Int
-    let imageURL: String
+    let capacity: String
+    let date: Date
+    let createdAt: Date
 }

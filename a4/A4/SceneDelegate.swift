@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // 3. Create a view hierarchy programmatically
         //let rootVC = HomescreenViewController()
-        let navController = UINavigationController(rootViewController: CreatePostViewController())
+        let navController = UINavigationController(rootViewController: rootVC)
 
         // 4. Set the navigation controller as the window's root view controller
         window.rootViewController = navController

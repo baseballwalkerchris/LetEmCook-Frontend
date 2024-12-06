@@ -69,14 +69,14 @@ class SocialEventViewCell: UICollectionViewCell {
     //MARK: - Configure, TO DO
     func socialConfigure(socialEvent: Event){
         //setupimage
-        let recipeImageUrl = URL(string: socialEvent.imageURL)
+        let recipeImageUrl = URL(string: socialEvent.imageUrl)
         foodImage.sd_setImage(with: recipeImageUrl)
-        eventName.text = socialEvent.eventName
-        author.text = "From \(socialEvent.author)"
-        attendeesLabel.text = "\(socialEvent.maxCount) total"
+        eventName.text = socialEvent.title
+        author.text = "From \(socialEvent.userId)"
+        attendeesLabel.text = "\(socialEvent.capacity) total"
         locationLabel.text = socialEvent.location
-        timeLabel.text = socialEvent.date
-        descriptionMessage.text = socialEvent.descriptionOfEvent
+//        timeLabel.text = socialEvent.date
+        descriptionMessage.text = socialEvent.description
         
       
     }

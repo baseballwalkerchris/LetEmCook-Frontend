@@ -1113,7 +1113,7 @@ class CreatePostViewController: UIViewController {
         eventPublishButton.setTitleColor(.white, for: .normal)
         eventPublishButton.setTitleColor(.systemGreen, for: .highlighted)
         eventPublishButton.titleLabel?.font = .systemFont(ofSize: 16)
-        eventPublishButton.addTarget(self, action: #selector(createRecipe), for: .touchUpInside)
+        eventPublishButton.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
         
         eventPublishButton.translatesAutoresizingMaskIntoConstraints = false
         eventContentView.addSubview(eventPublishButton)
@@ -1126,7 +1126,27 @@ class CreatePostViewController: UIViewController {
             eventPublishButton.bottomAnchor.constraint(equalTo: eventContentView.bottomAnchor, constant: -20)
         ])
     }
+    
+    // MARK: createEvent
+
+    @objc private func createEvent() {
+        let userId = "cdc236"
+        let title = eventTitleTextView.text ?? ""
+        let imageUrl = "placeholder"
+        let description = eventDescriptionTextView.text ?? ""
+        let location = eventLocationTextView.text ?? ""
+        let capacity = numberOfAttendeesTextView.text ?? ""
+        let date = datePicker.date
+        
+        NetworkManager.shared.createEvent(userId: userId, title: title, imageUrl: imageUrl, description: description, location: location, capacity: capacity, date: date) {
+            event in
+            // Do something
+        }
+        
+    }
 }
+
+
 
 extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -1155,6 +1175,9 @@ extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigatio
         return nil
     }
 }
+
+
+
 
 extension CreatePostViewController: UIPickerViewDelegate {
     private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
