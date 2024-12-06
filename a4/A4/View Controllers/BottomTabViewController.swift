@@ -7,9 +7,9 @@ class MainTabBarController: UITabBarController {
         
         
         homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
-        let homeNav = UINavigationController(rootViewController: HomescreenViewController())
+        let homeNav = UINavigationController(rootViewController: homeVC)
         
         
-        self.viewControllers = [homeVC]
+        self.viewControllers = [homeNav]
     }
 }

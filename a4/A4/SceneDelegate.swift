@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootVC = MainTabBarController()
         //window.rootViewController = MainTabBarController()
         //window.makeKeyAndVisible()
+//        let rootVC = SignUpViewController()
 
         // 3. Create a view hierarchy programmatically
         //let rootVC = HomescreenViewController()
