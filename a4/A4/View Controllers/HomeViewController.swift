@@ -47,10 +47,16 @@ class HomeViewController: UIViewController {
         recipesCollectionView.isHidden = true
         eventsCollectionView.isHidden = true
         
+        NetworkManager.shared.fetchStories { [weak self] fetchedStories in
+            DispatchQueue.main.async {
+                self?.stories = fetchedStories
+                self?.storiesCollectionView.reloadData()
+            }
+        }
         // Load mock data for events
         loadMockEvents()
         loadMockRecipes()
-        loadMockStories()
+//        loadMockStories()
     }
     
     // MARK: - Set up views
@@ -192,6 +198,7 @@ class HomeViewController: UIViewController {
     private func loadMockStories() {
         stories = [
             Story(id: 1, imageUrl: "https://example.com/story1.jpg", title: "emily122345", caption: "made this over the weekend and it was very good.", createdAt: Date()),
+            Story(id: 2, imageUrl: "https://example.com/story2.jpg", title: "johnDoe", caption: "Tried this recipe last night, amazing taste!", createdAt: Date()),
             Story(id: 2, imageUrl: "https://example.com/story2.jpg", title: "johnDoe", caption: "Tried this recipe last night, amazing taste!", createdAt: Date())
         ]
         storiesCollectionView.reloadData()

@@ -54,7 +54,7 @@ class NetworkManager {
      */
     func fetchStories(completion: @escaping ([Story]) -> Void) {
         // Specify the endpoint
-        let endpoint = ""
+        let endpoint = "\(devEndpoint)"
         
         decoder.dateDecodingStrategy = .iso8601
         decoder.keyDecodingStrategy = .convertFromSnakeCase
