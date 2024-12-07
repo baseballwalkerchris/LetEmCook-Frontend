@@ -42,7 +42,6 @@ class SavedItemCell: UICollectionViewCell {
 
         imageView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
-            make.width.equalTo(80)
         }
 
         titleLabel.snp.makeConstraints { make in
@@ -63,8 +62,15 @@ class SavedItemCell: UICollectionViewCell {
         }
     }
 
-    func configure(with item: String) {
+    func configure(with item: String, imagename: String) {
         titleLabel.text = item
-        imageView.image = UIImage(named: "\(item.lowercased())_icon")
+        imageView.image = UIImage(named: imagename)
+        if titleLabel.text == "Post" {
+            titleLabel.textColor = UIColor.systemYellow
+        } else if titleLabel.text == "Recipe" {
+            titleLabel.textColor = UIColor.systemGreen
+        } else if titleLabel.text == "Event" {
+            titleLabel.textColor = UIColor.systemBlue
+        }
     }
 }

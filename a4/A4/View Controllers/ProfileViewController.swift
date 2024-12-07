@@ -465,7 +465,7 @@ extension ProfileViewController: UICollectionViewDataSource {
         } else if collectionView == savedCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SavedItemCell.reuse, for: indexPath) as! SavedItemCell
             let item = savedItems[indexPath.item]
-            cell.configure(with: item)
+            cell.configure(with: item, imagename: "icecream")
             return cell
         } else  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventItemCell.reuse, for: indexPath) as! EventItemCell
