@@ -1,5 +1,7 @@
 # LetEmCook!
 
+Team 13: Aidan Joseph, Christopher Cheng, Kathy Cheng, Jesse Cheng, Ashlie Zhang
+
 Our app is a cooking social media app where users can share stories, recipes, and events, with the purpose of bringing college students together through food.
 
 Link to our backend repository: https://github.com/Jcheng777/FA24HackChallenge-Backend
