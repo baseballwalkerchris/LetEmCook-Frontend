@@ -85,10 +85,10 @@ class SocialEventViewController: UIViewController {
         setUpDetailsWord()
         setUpDetailsText()
         setUpOrganizersWord()
-       // setUpOrganizerContainerView()
+        setUpOrganizerContainerView()
         setUpOrganizerCollectionView()
         setUpAttendeesWord()
-        //setUpAttendeesContainerView()
+        setUpAttendeesContainerView()
         setUpAttendeesCollectionView()
     }
     
@@ -334,18 +334,18 @@ class SocialEventViewController: UIViewController {
         }
     }
     
-//    private func setUpOrganizerContainerView(){
-//        organizerContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
-//        organizerContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
-//        organizerContainerView.layer.borderWidth = 0 // Optional: For a border
-//        
-//        contentView.addSubview(organizerContainerView)
-//        organizerContainerView.snp.makeConstraints{ make in
-//            make.top.equalTo(organizersWord.snp.bottom).offset(2)
-//            make.leading.trailing.equalToSuperview().inset(16)
-//            make.height.equalTo(100) // Adjust height as needed
-//        }
-//    }
+    private func setUpOrganizerContainerView(){
+        organizerContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
+        organizerContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
+        organizerContainerView.layer.borderWidth = 0 // Optional: For a border
+        
+        contentView.addSubview(organizerContainerView)
+        organizerContainerView.snp.makeConstraints{ make in
+            make.top.equalTo(organizersWord.snp.bottom).offset(2)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(100) // Adjust height as needed
+        }
+    }
     
     private func setUpOrganizerCollectionView(){
         let organizerLayout = UICollectionViewFlowLayout()
@@ -380,19 +380,19 @@ class SocialEventViewController: UIViewController {
         }
     }
     
-//    private func setUpAttendeesContainerView(){
-//        attendeesContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
-//        attendeesContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
-//        attendeesContainerView.layer.borderWidth = 0 // Optional: For a border
-//        
-//        contentView.addSubview(attendeesContainerView)
-//        attendeesContainerView.snp.makeConstraints{ make in
-//            make.top.equalTo(attendeesWord.snp.bottom).offset(16)
-//            make.leading.trailing.equalToSuperview()
-//            make.height.equalTo(120) // Adjust height for proper scrolling
-//            make.bottom.equalToSuperview()
-//        }
-//    }
+    private func setUpAttendeesContainerView(){
+        attendeesContainerView.backgroundColor = UIColor.a4.offWhite // Or your preferred color
+        attendeesContainerView.layer.masksToBounds = true // Ensures content is clipped to bounds
+        attendeesContainerView.layer.borderWidth = 0 // Optional: For a border
+        
+        contentView.addSubview(attendeesContainerView)
+        attendeesContainerView.snp.makeConstraints{ make in
+            make.top.equalTo(attendeesWord.snp.bottom).offset(16)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(120) // Adjust height for proper scrolling
+            make.bottom.equalToSuperview()
+        }
+    }
     
     private func setUpAttendeesCollectionView(){
         let attendeesLayout = UICollectionViewFlowLayout()
