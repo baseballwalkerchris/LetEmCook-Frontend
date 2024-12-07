@@ -11,6 +11,13 @@ class EventItemCell: UICollectionViewCell {
     private let titleLabel = UILabel()
     private let timeLabel = UILabel()
     private let locationLabel = UILabel()
+    private let peopleGoing = UILabel()
+    private let eventImage = UIImageView()
+    
+    private let attendeesImage = UIImageView()
+    private let locationImage = UIImageView()
+    private let dateImage = UIImageView()
+    
     static let reuse = "EventItemCellReuse"
 
     override init(frame: CGRect) {
@@ -29,6 +36,9 @@ class EventItemCell: UICollectionViewCell {
 
         titleLabel.font = .boldSystemFont(ofSize: 16)
         addSubview(titleLabel)
+        
+        peopleGoing.font = .boldSystemFont(ofSize: 16)
+        addSubview(peopleGoing)
 
         timeLabel.font = .systemFont(ofSize: 14)
         timeLabel.textColor = .gray
@@ -37,25 +47,72 @@ class EventItemCell: UICollectionViewCell {
         locationLabel.font = .systemFont(ofSize: 14)
         locationLabel.textColor = .gray
         addSubview(locationLabel)
+        
+        attendeesImage.image = UIImage(named: "attendeeImage")
+        addSubview(attendeesImage)
+        
+        dateImage.image = UIImage(named: "timeImage")
+        addSubview(dateImage)
+        
+        locationImage.image = UIImage(named: "locationImage")
+        addSubview(locationImage)
+        
+        addSubview(eventImage)
+        
+
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(16)
+            make.leading.top.equalToSuperview().offset(8)
+        }
+        
+        attendeesImage.snp.makeConstraints{ make in
+            make.leading.equalTo(titleLabel.snp.leading)
+            make.top.equalTo(titleLabel.snp.bottom).offset(2)
+        }
+        
+        dateImage.snp.makeConstraints{ make in
+            make.leading.equalTo(titleLabel.snp.leading)
+            make.top.equalTo(attendeesImage.snp.bottom).offset(2)
+        }
+        
+        locationImage.snp.makeConstraints{ make in
+            make.leading.equalTo(titleLabel.snp.leading)
+            make.top.equalTo(dateImage.snp.bottom).offset(2)
+        }
+        
+        peopleGoing.snp.makeConstraints{ make in
+            make.leading.equalTo(attendeesImage.snp.trailing).offset(4)
+            make.centerY.equalTo(attendeesImage.snp.centerY)
         }
 
         timeLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.leading.equalTo(dateImage.snp.trailing).offset(4)
+            make.centerY.equalTo(dateImage.snp.centerY)
         }
 
         locationLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalTo(timeLabel.snp.bottom).offset(4)
+            make.leading.equalTo(locationImage.snp.trailing).offset(4)
+            make.centerY.equalTo(locationImage.snp.centerY)
         }
     }
 
-    func configure(with event: (title: String, time: String, location: String)) {
+    func configure(event: Event) {
+//        let id: Int
+//        let userId: Int
+//        let title: String
+//        let imageUrl: String
+//        let caption: String
+//        let location: String
+//        let numberGoing: Int
+//        let createdAt: Date
         titleLabel.text = event.title
-        timeLabel.text = event.time
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" // Example: Dec 12, 2024 5:30 PM
+//        timeLabel.text = dateFormatter.string(from: event.date)
+        timeLabel.text = "placeholder date"
         locationLabel.text = event.location
+        peopleGoing.text = "\(event.numberGoing) + going"
+        let eventImageurl = URL(string: event.imageUrl)
+        eventImage.sd_setImage(with: eventImageurl)
     }
 }

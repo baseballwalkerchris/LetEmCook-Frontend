@@ -50,6 +50,16 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     private let vegetableImages = ["cucumber","cucumber","cucumber","cucumber","cucumber","cucumber","cucumber"]
     private let meatImages = ["meat", "meat", "meat"]
     
+    //MARK: refreshcontrol/ingredients
+    private let refreshControl = UIRefreshControl()
+    private var ingredients: [Ingredient] = [
+        ]
+    
+    private var events: [Event] = [
+        
+    ]
+    
+    
     //MARK: views/Data for saved
     private var savedCollectionView: UICollectionView!
     private let savedItems = ["Post", "Recipe", "Event"]
@@ -57,7 +67,7 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     
     //MARK: Views/data for events
     private var eventsCollectionView: UICollectionView!
-    private let events = [
+    private let eventsDummy = [
             ("Taco Tuesday", "5:30 PM 12/23/25", "Eddy Gate Apartments"),
             ("Popcorn Movie", "6:00 PM 12/24/25", "Downtown Cinema"),
             ("Pizza Party", "7:00 PM 12/25/25", "Central Park")
@@ -328,6 +338,8 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     }
     
     private func setupDairySection() {
+        
+        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 4
@@ -362,6 +374,8 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         vegetableLabel.text = "Vegetables"
         vegetableLabel.font = .boldSystemFont(ofSize: 18)
         fridgeContentView.addSubview(vegetableLabel)
+//        vegetableCollectionView.refreshControl = refreshControl
+//        refreshControl.addTarget(self, action: #selector(fetchAllIngredients), for: .valueChanged)
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -393,6 +407,8 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     private func setupMeatSection() {
         fridgeContentView.addSubview(meatLabel)
         
+//        meatCollectionView.refreshControl = refreshControl
+//        refreshControl.addTarget(self, action: #selector(fetchAllIngredients), for: .valueChanged)
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 4
@@ -449,7 +465,10 @@ extension ProfileViewController: UICollectionViewDataSource {
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
-                    cell.configure(with: dairyItems[indexPath.item], with: dairyImages[indexPath.item])
+                    if ingredients.count > 0 {
+                        cell.configure(ingredient: ingredients[indexPath.item])
+                    }
+                   
                 }
             return cell
         } else if collectionView == vegetableCollectionView {
@@ -458,7 +477,10 @@ extension ProfileViewController: UICollectionViewDataSource {
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
-                    cell.configure(with: vegetableItems[indexPath.item], with: vegetableImages[indexPath.item])
+                    if ingredients.count > 0 {
+                        cell.configure(ingredient: ingredients[indexPath.item])
+                    }
+                    
             }
             return cell
         } else if collectionView == meatCollectionView{
@@ -467,7 +489,10 @@ extension ProfileViewController: UICollectionViewDataSource {
             if indexPath.item == 0 {
                     cell.configureAddButton()
                 } else {
-                    cell.configure(with: meatItems[indexPath.item], with: meatImages[indexPath.item])
+                    if ingredients.count > 0 {
+                        cell.configure(ingredient: ingredients[indexPath.item])
+                    }
+                    
                 }
             return cell
         } else if collectionView == savedCollectionView {
@@ -481,7 +506,7 @@ extension ProfileViewController: UICollectionViewDataSource {
         } else  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventItemCell.reuse, for: indexPath) as! EventItemCell
             let event = events[indexPath.item]
-            cell.configure(with: event)
+            cell.configure(event: event)
             return cell
         }
   
@@ -500,7 +525,7 @@ extension ProfileViewController: UICollectionViewDelegate {
 }
 
 
-
+//MARK: extension for saved and event colleciton views
 
 extension ProfileViewController {
     private func setupSavedCollectionView() {
@@ -527,7 +552,7 @@ extension ProfileViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         
-        layout.itemSize = CGSize(width: 130, height: 130)
+        layout.itemSize = CGSize(width: 300, height: 130)
         layout.minimumLineSpacing = 16
         layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         eventsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -547,4 +572,34 @@ extension ProfileViewController {
    
 }
 
+//MARK: extension network manager
+extension ProfileViewController {
+    @objc private func fetchAllIngredients() {
+        NetworkManager.shared.fetchIngredients{ [weak self] ingredients in
+            guard let self = self else { return }
+            self.ingredients = ingredients
+            //below some stuff for sorting by new/top posts
+            DispatchQueue.main.async {
+                self.meatCollectionView.reloadData()
+                self.dairyCollectionView.reloadData()
+                self.vegetableCollectionView.reloadData()
+                //below tells when to stop spinning
+                self.refreshControl.endRefreshing() // End refresh control
+            }
+        }
+    }
     
+    @objc private func fetchEvents() {
+        NetworkManager.shared.fetchEvents { [weak self] events in
+            guard let self = self else { return }
+            self.events = events
+            //below some stuff for sorting by new/top posts
+            DispatchQueue.main.async {
+                self.eventsCollectionView.reloadData()
+                //below tells when to stop spinning
+                self.refreshControl.endRefreshing() // End refresh control
+            }
+        }
+    }
+
+}

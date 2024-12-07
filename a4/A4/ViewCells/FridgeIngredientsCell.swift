@@ -75,9 +75,13 @@ class ItemCell: UICollectionViewCell {
         }
     }
     
-    func configure(with itemName: String, with imageName: String) {
-        nameLabel.text = itemName
-        imageView.image = UIImage(named: imageName) // Replace with actual image
+    func configure(ingredient: Ingredient) {
+        nameLabel.text = ingredient.name
+        if let url = URL(string: ingredient.imageUrl) {
+            imageView.sd_setImage(with: url)
+        } else {
+            imageView.image = UIImage(named: "placeholder") // Fallback to a default image if URL is invalid
+        }
     }
     
     func configureAddButton() {

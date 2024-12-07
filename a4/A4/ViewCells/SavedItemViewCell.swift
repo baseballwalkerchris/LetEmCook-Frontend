@@ -28,7 +28,9 @@ class SavedItemCell: UICollectionViewCell {
         layer.borderColor = UIColor.lightGray.cgColor
         layer.cornerRadius = 0
 
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        //imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
 
         titleLabel.font = .systemFont(ofSize: 14)
@@ -64,6 +66,7 @@ class SavedItemCell: UICollectionViewCell {
 
     func configure(with item: String, imagename: String) {
         titleLabel.text = item
+        titleLabel.font = .systemFont(ofSize: 14, weight: .bold).rounded
         imageView.image = UIImage(named: imagename)
         if titleLabel.text == "Post" {
             titleLabel.textColor = UIColor.systemYellow
