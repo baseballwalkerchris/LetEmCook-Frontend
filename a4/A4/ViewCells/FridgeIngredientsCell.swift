@@ -7,6 +7,11 @@
 import UIKit
 import SnapKit
 
+protocol ItemCellDelegate: AnyObject {
+    func addButtonTapped()
+}
+
+
 class ItemCell: UICollectionViewCell {
     
     static let reuse = "ItemCell"
@@ -19,14 +24,12 @@ class ItemCell: UICollectionViewCell {
     
     //mark: data for checkmark
     private var didCheckmark: Bool
+    weak var delegate: ItemCellDelegate?
+
     
     override init(frame: CGRect) {
         self.didCheckmark = false
         super.init(frame: frame)
-        
-        
-        
-        
         setupImageView()
         setupNameLabel()
         setUpRemoveButton()
@@ -90,6 +93,7 @@ class ItemCell: UICollectionViewCell {
         addButton.clipsToBounds = true
         addButton.layer.cornerRadius = 8
         addButton.setImage(UIImage(named: "addIngredientButton"), for: .normal)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         contentView.addSubview(addButton)
         addButton.snp.makeConstraints { make in
@@ -98,6 +102,7 @@ class ItemCell: UICollectionViewCell {
         }
     }
     
+
     private func setUpCheckmarkBox() {
         checkmarkBox.contentMode = .scaleAspectFill
         checkmarkBox.clipsToBounds = true
@@ -122,4 +127,9 @@ class ItemCell: UICollectionViewCell {
         }
         
     }
+    @objc private func addButtonTapped() {
+        delegate?.addButtonTapped() // Notify delegate when button is tapped
+
+    }
 }
+
