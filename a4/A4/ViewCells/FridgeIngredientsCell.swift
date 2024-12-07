@@ -19,16 +19,21 @@ class ItemCell: UICollectionViewCell {
     private var imageView = UIImageView()
     private let nameLabel = UILabel()
     private let removeButton = UIButton()
+    private let checkmarkBox = UIButton()
     private let addButton = UIButton()
     
+    //mark: data for checkmark
+    private var didCheckmark: Bool
     weak var delegate: ItemCellDelegate?
 
     
     override init(frame: CGRect) {
+        self.didCheckmark = false
         super.init(frame: frame)
         setupImageView()
         setupNameLabel()
         setUpRemoveButton()
+        setUpCheckmarkBox()
     }
     
     required init?(coder: NSCoder) {
@@ -48,13 +53,13 @@ class ItemCell: UICollectionViewCell {
     }
     
     private func setupNameLabel() {
-        nameLabel.font = .systemFont(ofSize: 12)
+        nameLabel.font = .systemFont(ofSize: 11)
         nameLabel.textAlignment = .center
         contentView.addSubview(nameLabel)
         
         nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(4)
-            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(imageView.snp.bottom).offset(1)
+            make.leading.equalToSuperview().inset(12)
         }
     }
     
@@ -70,15 +75,20 @@ class ItemCell: UICollectionViewCell {
         }
     }
     
-    func configure(with itemName: String, with imageName: String) {
-        nameLabel.text = itemName
-        imageView.image = UIImage(named: imageName) // Replace with actual image
+    func configure(ingredient: Ingredient) {
+        nameLabel.text = ingredient.name
+        if let url = URL(string: ingredient.imageUrl) {
+            imageView.sd_setImage(with: url)
+        } else {
+            imageView.image = UIImage(named: "placeholder") // Fallback to a default image if URL is invalid
+        }
     }
     
     func configureAddButton() {
         imageView.isHidden = true
         nameLabel.isHidden = true
         removeButton.isHidden = true
+        checkmarkBox.isHidden = true
         setUpAddButton()
     }
     
@@ -96,8 +106,34 @@ class ItemCell: UICollectionViewCell {
         }
     }
     
+
+    private func setUpCheckmarkBox() {
+        checkmarkBox.contentMode = .scaleAspectFill
+        checkmarkBox.clipsToBounds = true
+        checkmarkBox.setImage(UIImage(named: "uncheckedButton"), for: .normal)
+        checkmarkBox.addTarget(self, action: #selector(checkmarkBoxTapped), for: .touchUpInside)
+        
+        contentView.addSubview(checkmarkBox)
+        
+        checkmarkBox.snp.makeConstraints{ make in
+            make.centerY.equalTo(nameLabel.snp.centerY)
+            make.trailing.equalToSuperview().inset(10)
+            make.height.width.equalTo(10)
+        }
+    }
+    
+    @objc private func checkmarkBoxTapped() {
+        didCheckmark.toggle()
+        if didCheckmark{
+            checkmarkBox.setImage(UIImage(named: "checkmarkedButton"), for: .normal)
+        } else{
+            checkmarkBox.setImage(UIImage(named: "uncheckedButton"), for: .normal)
+        }
+        
+    }
     @objc private func addButtonTapped() {
         delegate?.addButtonTapped() // Notify delegate when button is tapped
+
     }
 }
 

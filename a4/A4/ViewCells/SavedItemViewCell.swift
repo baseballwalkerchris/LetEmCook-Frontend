@@ -11,6 +11,7 @@ class SavedItemCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private let bookmarkImage = UIImageView()
+    private let trashButton = UIButton()
     static let reuse = "SavedItemCellReuse"
 
     override init(frame: CGRect) {
@@ -27,7 +28,9 @@ class SavedItemCell: UICollectionViewCell {
         layer.borderColor = UIColor.lightGray.cgColor
         layer.cornerRadius = 0
 
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        //imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
 
         titleLabel.font = .systemFont(ofSize: 14)
@@ -35,25 +38,42 @@ class SavedItemCell: UICollectionViewCell {
         
         bookmarkImage.image = UIImage(named: "bookmarked")
         addSubview(bookmarkImage)
+        
+        trashButton.setImage(UIImage(named: "trash"), for: .normal)
+        addSubview(trashButton)
 
         imageView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
-            make.width.equalTo(80)
         }
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(imageView.snp.leading).inset(8)
-            make.centerY.equalToSuperview()
+            make.bottom.equalToSuperview().inset(8)
         }
         
         bookmarkImage.snp.makeConstraints{ make in
-            make.width.height.equalTo(20)
+            make.height.equalTo(20)
+            make.width.equalTo(15)
             make.trailing.top.equalToSuperview().inset(8)
+        }
+        
+        trashButton.snp.makeConstraints { make in
+            make.height.equalTo(20)
+            make.width.equalTo(15)
+            make.trailing.bottom.equalToSuperview().inset(8)
         }
     }
 
-    func configure(with item: String) {
+    func configure(with item: String, imagename: String) {
         titleLabel.text = item
-        imageView.image = UIImage(named: "\(item.lowercased())_icon")
+        titleLabel.font = .systemFont(ofSize: 14, weight: .bold).rounded
+        imageView.image = UIImage(named: imagename)
+        if titleLabel.text == "Post" {
+            titleLabel.textColor = UIColor.systemYellow
+        } else if titleLabel.text == "Recipe" {
+            titleLabel.textColor = UIColor.systemGreen
+        } else if titleLabel.text == "Event" {
+            titleLabel.textColor = UIColor.systemBlue
+        }
     }
 }

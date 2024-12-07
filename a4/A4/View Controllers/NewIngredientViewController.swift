@@ -216,5 +216,11 @@ class NewIngredientViewController: UIViewController, UIImagePickerControllerDele
     @objc private func addIngredient() {
         print("Add ingredient button tapped")
         // Handle add logic here
+        NetworkManager.shared.postImage(image: (imageView.image ?? UIImage(systemName: "photo"))!) { [weak self] image in
+            guard let self = self else { return }
+            print("Image was added to ingredients.")
+            // Do something with the member if needed
+        }
+       
     }
 }
