@@ -13,26 +13,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // 1. Capture the scene
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        // 2. Create a new UIWindow and pass in a UIWindowScene
+
         let window = UIWindow(windowScene: windowScene)
-        
-        let rootVC = MainTabBarController()
-        //window.rootViewController = MainTabBarController()
-        //window.makeKeyAndVisible()
-       // let rootVC = SignUpViewController()
-
-        // 3. Create a view hierarchy programmatically
-        //let rootVC = HomescreenViewController()
-        let navController = UINavigationController(rootViewController: rootVC)
-
-        // 4. Set the navigation controller as the window's root view controller
-        window.rootViewController = navController
-
-        // 5. Set the window and call makeKeyAndVisible()
         self.window = window
+
+        // Check if the user has "signed in" (simulated with UserDefaults)
+        let hasSignedIn = UserDefaults.standard.bool(forKey: "hasSignedIn")
+
+        if hasSignedIn {
+            // Show MainTabBarController
+            window.rootViewController = UINavigationController(rootViewController: MainTabBarController())
+        } else {
+            // Show SignUpViewController
+            window.rootViewController = UINavigationController(rootViewController: SignUpViewController())
+        }
+        
         window.makeKeyAndVisible()
     }
 

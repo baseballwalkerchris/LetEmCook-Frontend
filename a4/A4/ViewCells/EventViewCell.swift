@@ -78,7 +78,7 @@ class EventViewCell: UICollectionViewCell {
         // Assign title and user details
         eventName.text = event.title
         eventName.textColor = .black
-        author.text = "From \(event.userId)"
+        author.text = "From cdc236"
         
         // Set attendees' capacity
         attendeesLabel.text = "\(event.numberGoing) attendees"
@@ -89,8 +89,7 @@ class EventViewCell: UICollectionViewCell {
         // Format and assign the event date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" // Example: Dec 12, 2024 5:30 PM
-//        timeLabel.text = dateFormatter.string(from: event.date)
-        timeLabel.text = "placeholder date"
+        timeLabel.text = dateFormatter.string(from: event.createdAt)
 
         // Assign event description
         descriptionMessage.text = event.caption
@@ -136,7 +135,7 @@ class EventViewCell: UICollectionViewCell {
         foodImage.addSubview(eventName)
         
         eventName.snp.makeConstraints{ make in
-            make.bottom.equalTo(foodImage.snp.bottom).inset(6)
+            make.bottom.equalTo(foodImage.snp.bottom).offset(20)
             make.leading.equalToSuperview().inset(6)
         }
     }
@@ -161,7 +160,7 @@ class EventViewCell: UICollectionViewCell {
             make.width.equalTo(9.23)
             make.height.equalTo(10)
             make.leading.equalToSuperview().inset(10)
-            make.top.equalTo(foodImage.snp.bottom).offset(10)
+            make.top.equalTo(foodImage.snp.bottom).offset(22)
         }
     }
     

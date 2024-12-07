@@ -8,6 +8,20 @@
 //MARK: conform with backend, temp data for now
 import Foundation
 
+struct RecipeResponse: Codable {
+    let success: Bool
+    let data: Recipe
+}
+
+struct FetchRecipeResponse: Codable {
+    let success: Bool
+    let data: RecipeData
+}
+
+struct RecipeData: Codable {
+    let recipes: [Recipe]
+}
+
 struct Recipe: Codable {
     let id: Int
     let userId: String
@@ -18,6 +32,6 @@ struct Recipe: Codable {
     let ratings: String
     let description: String
     let ingredients: [Ingredient]
-    let instructions: [Direction]
+    let instructions: [String] // Update to a list of strings for compatibility
     let createdAt: Date
 }

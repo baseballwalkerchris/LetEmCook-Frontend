@@ -371,9 +371,7 @@ extension RecipeViewController: UICollectionViewDataSource, UICollectionViewDele
      
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
-        
-            // TODO: dummy data
-        cell.configure(ingredient: Ingredient(id: 0, name: "test", imageUrl: "test"))
+            cell.configure(ingredient: Ingredient(id: 0, name: "Milk", imageUrl: "boba"))
             return cell
     }
 }

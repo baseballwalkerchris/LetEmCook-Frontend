@@ -22,4 +22,18 @@ class MainTabBarController: UITabBarController {
         
         self.viewControllers = [homeNav, profileNav, createNav]
     }
+    
+}
+
+extension MainTabBarController {
+    func logOut() {
+        // Simulate logging out by resetting the flag
+        UserDefaults.standard.set(false, forKey: "hasSignedIn")
+
+        // Transition back to the sign-up view controller
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            let signUpViewController = SignUpViewController()
+            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: signUpViewController)
+        }
+    }
 }

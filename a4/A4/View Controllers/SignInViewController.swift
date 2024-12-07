@@ -37,14 +37,16 @@ class SignInViewController: UIViewController {
         setUpPasswordTextField()
         setUpSignInButton()
         setUpCreateAccountButton()
-
+        
     }
     
     
     //MARK: - Inits
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        view.backgroundColor = UIColor.a4.offWhite
+        let customLightBlue = UIColor(red: 120/255.0, green: 180/255.0, blue: 240/255.0, alpha: 1.0)
+        view.backgroundColor = customLightBlue
+        
     }
     
     required init?(coder: NSCoder) {
@@ -52,8 +54,8 @@ class SignInViewController: UIViewController {
     }
     
     //MARK: - set upviews
-      
-  
+    
+    
     private func setUpEmptyProfPic(){
         emptyProfPic.image = UIImage(named: "noProfPic")
         emptyProfPic.layer.cornerRadius = 124/2
@@ -67,23 +69,24 @@ class SignInViewController: UIViewController {
         }
     }
     private func setUpLoginLabel(){
-            loginLabel.text = "Login"
-            loginLabel.textColor = UIColor.a4.black
-            loginLabel.font = .systemFont(ofSize: 40, weight: .bold).rounded
-            view.addSubview(loginLabel)
-            
-            loginLabel.snp.makeConstraints{ make in
-                make.centerX.equalToSuperview()
-                make.top.equalTo(emptyProfPic.snp.bottom).offset(40)
-            }
+        loginLabel.text = "Login"
+        loginLabel.textColor = UIColor.a4.black
+        loginLabel.font = .systemFont(ofSize: 40, weight: .bold).rounded
+        view.addSubview(loginLabel)
+        
+        loginLabel.snp.makeConstraints{ make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(emptyProfPic.snp.bottom).offset(40)
         }
+    }
     
     private func setUpUsernameTextField(){
         usernameTextField.placeholder = "Username"
         usernameTextField.layer.borderWidth = 1
-        usernameTextField.layer.borderColor = UIColor.a4.silver.cgColor
+        usernameTextField.layer.borderColor = UIColor.a4.offWhite.cgColor
         usernameTextField.layer.cornerRadius = 20
         usernameTextField.font = .systemFont(ofSize: 16)
+        usernameTextField.textColor = .white
         
         //Subview
         view.addSubview(usernameTextField)
@@ -101,11 +104,12 @@ class SignInViewController: UIViewController {
     }
     
     private func setUpPasswordTextField(){
-        passwordTextField.placeholder = "Username"
+        passwordTextField.placeholder = "Password"
         passwordTextField.layer.borderWidth = 1
-        passwordTextField.layer.borderColor = UIColor.a4.silver.cgColor
+        passwordTextField.layer.borderColor = UIColor.a4.offWhite.cgColor
         passwordTextField.layer.cornerRadius = 20
         passwordTextField.font = .systemFont(ofSize: 16)
+        passwordTextField.textColor = .white
         
         //Subview
         view.addSubview(passwordTextField)
@@ -127,6 +131,8 @@ class SignInViewController: UIViewController {
         signInButton.layer.cornerRadius = 30
         view.addSubview(signInButton)
         
+        signInButton.addTarget(self, action: #selector(onSignInComplete), for: .touchUpInside)
+        
         signInButton.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(passwordTextField.snp.bottom).offset(20)
@@ -145,17 +151,27 @@ class SignInViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(signInButton.snp.bottom).offset(10)
         }
-        
-        
-        
     }
+    
+    
+    @objc func onSignInComplete() {
+        // Simulate a successful sign-up by setting the flag
+        UserDefaults.standard.set(true, forKey: "hasSignedIn")
+        
+        // Transition to the main tab bar controller
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            let mainTabBarController = MainTabBarController()
+            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: mainTabBarController)
+        }
+    }
+    
+    
     @objc private func createAccountButtonTapped(){
         navigationController?.popViewController( animated: true)
     }
     
-    
-    
-    
-    
-    
 }
+
+    
+    
+    

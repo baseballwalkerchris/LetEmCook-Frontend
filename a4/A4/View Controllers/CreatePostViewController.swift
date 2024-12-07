@@ -13,6 +13,11 @@ class CreatePostViewController: UIViewController, UIPickerViewDelegate {
     let customHeaderView = CustomHeaderView()
     let segmentedControl = UISegmentedControl(items: ["Story", "Recipe", "Event"])
     
+    // Variables to store uploaded image URLs
+    private var storyImageUrl: String?
+    private var recipeImageUrl: String?
+    private var eventImageUrl: String?
+    
     // Properties for stories
     let storyScrollView = UIScrollView()
     let storyContentView = UIView()
@@ -346,11 +351,14 @@ class CreatePostViewController: UIViewController, UIPickerViewDelegate {
     // MARK: createStory
     
     @objc private func createStory() {
-        let userId = "cdc236"
+        let userId = "ashlie"
         let caption = captionTextView.text ?? ""
         
         // TODO: upload image to backend server, then get back URL
-        let imageUrl = "placeholder"
+        guard let imageUrl = storyImageUrl else {
+            print("No image URL available. Please upload an image first.")
+            return
+        }
         
         NetworkManager.shared.createStory(userId: userId, caption: caption, imageUrl: imageUrl) {
             post in
@@ -848,19 +856,14 @@ class CreatePostViewController: UIViewController, UIPickerViewDelegate {
         
     }
     
-    private func collectDirections() -> [Direction] {
-        var directions: [Direction] = []
+    private func collectDirections() -> [String] {
+        var directions: [String] = []
         
-        for (index, view) in directionsStackView.arrangedSubviews.enumerated() {
+        for view in directionsStackView.arrangedSubviews {
             if let containerView = view as? UIStackView {
                 if let textField = containerView.arrangedSubviews.compactMap({ $0 as? UITextField }).first,
                    let directionText = textField.text, !directionText.isEmpty {
-                    let direction = Direction(
-                        stepNumber: index + 1,
-                        description: directionText,
-                        isCompleted: false // Default to false
-                    )
-                    directions.append(direction)
+                    directions.append(directionText)
                 }
             }
         }
@@ -1193,7 +1196,10 @@ class CreatePostViewController: UIViewController, UIPickerViewDelegate {
     @objc private func createEvent() {
         let userId = 0
         let title = eventTitleTextView.text ?? ""
-        let imageUrl = "placeholder"
+        guard let imageUrl = eventImageUrl else {
+            print("No image URL available. Please upload an image first.")
+            return
+        }
         let description = eventDescriptionTextView.text ?? ""
         let location = eventLocationTextView.text ?? ""
         let capacity = Int(numberOfAttendeesTextView.text ?? "") ?? 4
@@ -1266,29 +1272,32 @@ extension CreatePostViewController: UIImagePickerControllerDelegate {
         present(imagePicker, animated: true)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             switch segmentedControl.selectedSegmentIndex {
             case 0: // Story
                 storySelectedImageView.image = selectedImage
                 uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
                     guard let self = self else { return }
-                    self.storySelectedImageView.tag = 1 // Track the upload completion with a tag
-                    self.storySelectedImageView.accessibilityLabel = imageUrl // Store the URL in the label
-                    print(self.storySelectedImageView.accessibilityLabel)
+                    print("pleassere")
+                    self.storyImageUrl = imageUrl // Save the image URL
+                    self.storySelectedImageView.tag = 1 // Track upload completion
+                    self.storySelectedImageView.accessibilityLabel = imageUrl // Optional for debugging
                 }
             case 1: // Recipe
                 recipeSelectedImageView.image = selectedImage
                 uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
                     guard let self = self else { return }
-                    self.recipeSelectedImageView.tag = 1 // Track the upload completion with a tag
+                    self.recipeImageUrl = imageUrl // Save the image URL
+                    self.recipeSelectedImageView.tag = 1
                     self.recipeSelectedImageView.accessibilityLabel = imageUrl
                 }
             case 2: // Event
                 eventSelectedImageView.image = selectedImage
                 uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
                     guard let self = self else { return }
-                    self.eventSelectedImageView.tag = 1 // Track the upload completion with a tag
+                    self.eventImageUrl = imageUrl // Save the image URL
+                    self.eventSelectedImageView.tag = 1
                     self.eventSelectedImageView.accessibilityLabel = imageUrl
                 }
             default:
@@ -1297,7 +1306,6 @@ extension CreatePostViewController: UIImagePickerControllerDelegate {
         }
         picker.dismiss(animated: true)
     }
-
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
     }

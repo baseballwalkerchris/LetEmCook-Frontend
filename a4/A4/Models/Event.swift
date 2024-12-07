@@ -36,5 +36,6 @@ struct Event: Codable {
     let caption: String
     let location: String
     let numberGoing: Int
+//    let time: Date
     let createdAt: Date
 }

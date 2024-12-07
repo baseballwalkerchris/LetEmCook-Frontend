@@ -23,6 +23,8 @@ class HomescreenViewController: UIViewController {
     // Data source for stories
     private var stories: [Story] = []
     
+    private let refreshControl = UIRefreshControl()
+    
     // MARK: - init
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -49,6 +51,7 @@ class HomescreenViewController: UIViewController {
         setupStoriesCollectionView()
         setupRecipesCollectionView()
         setupEventsCollectionView()
+        loadMockRecipes()
 
         // Hide other collection views initially
         recipesCollectionView.isHidden = true
@@ -70,8 +73,6 @@ class HomescreenViewController: UIViewController {
             }
         }
 
-        // Load mock recipes
-        loadMockRecipes()
     }
     // MARK: - Set up views
     
@@ -117,6 +118,8 @@ class HomescreenViewController: UIViewController {
     private func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 10),
@@ -125,6 +128,7 @@ class HomescreenViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+
     
     private func setupContentView() {
         scrollView.addSubview(contentView)
@@ -169,7 +173,7 @@ class HomescreenViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 2 // Spacing between columns
         layout.minimumLineSpacing = 15 // Spacing between rows
-        layout.itemSize = CGSize(width: 160, height: 250) // Adjust the height as needed
+        layout.itemSize = CGSize(width: 160, height: 300) // Adjust the height as needed
         
         recipesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         recipesCollectionView.delegate = self
@@ -189,12 +193,44 @@ class HomescreenViewController: UIViewController {
         ])
     }
     
+    @objc private func refreshData() {
+        switch segmentedControl.selectedSegmentIndex {
+        case 0: // Stories
+            NetworkManager.shared.fetchStories { [weak self] fetchedStories in
+                DispatchQueue.main.async {
+                    self?.stories = fetchedStories
+                    self?.storiesCollectionView.reloadData()
+                    self?.refreshControl.endRefreshing()
+                }
+            }
+        case 1: // Recipes
+            // Assuming you fetch recipes from the network
+            NetworkManager.shared.fetchRecipes { [weak self] fetchedRecipes in
+                DispatchQueue.main.async {
+                    self?.recipes = fetchedRecipes
+                    self?.recipesCollectionView.reloadData()
+                    self?.refreshControl.endRefreshing()
+                }
+            }
+        case 2: // Events
+            NetworkManager.shared.fetchEvents { [weak self] fetchedEvents in
+                DispatchQueue.main.async {
+                    self?.events = fetchedEvents
+                    self?.eventsCollectionView.reloadData()
+                    self?.refreshControl.endRefreshing()
+                }
+            }
+        default:
+            break
+        }
+    }
+    
     private func setupEventsCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 2 // Spacing between columns
         layout.minimumLineSpacing = 15 // Spacing between rows
-        layout.itemSize = CGSize(width: 160, height: 250) // Adjust the height as needed
+        layout.itemSize = CGSize(width: 160, height: 320) // Adjust the height as needed
         
         eventsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         eventsCollectionView.delegate = self
@@ -212,6 +248,63 @@ class HomescreenViewController: UIViewController {
             eventsCollectionView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
             eventsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+    
+    private func loadMockRecipes() {
+        recipes = [
+            Recipe(
+                id: 1,
+                userId: "chef1",
+                title: "Spaghetti Bolognese",
+                imageUrl: "spaghetti",
+                time: "30 mins",
+                servings: "4",
+                ratings: "4.5",
+                description: "Classic Italian pasta dish with rich meat sauce.",
+                ingredients: [],
+                instructions: [],
+                createdAt: Date()
+            ),
+            Recipe(
+                id: 2,
+                userId: "chef2",
+                title: "Avocado Toast",
+                imageUrl: "avocado_toas",
+                time: "10 mins",
+                servings: "1",
+                ratings: "5",
+                description: "Simple and delicious avocado toast.",
+                ingredients: [],
+                instructions: [],
+                createdAt: Date()
+            ),
+            Recipe(
+                id: 3,
+                userId: "chef3",
+                title: "Grilled Chicken Salad",
+                imageUrl: "grilled_chicken",
+                time: "25 mins",
+                servings: "2",
+                ratings: "4",
+                description: "Healthy grilled chicken salad with fresh vegetables.",
+                ingredients: [],
+                instructions: [],
+                createdAt: Date()
+            ),
+            Recipe(
+                    id: 1,
+                    userId: "bubblelover123",
+                    title: "Classic Bubble Tea",
+                    imageUrl: "bubble_tea", // Replace with your image URL
+                    time: "20 mins",
+                    servings: "2 cups",
+                    ratings: "5",
+                    description: "A simple and delicious bubble tea recipe to enjoy at home.",
+                    ingredients: [],
+                    instructions: [ ],
+                    createdAt: Date()
+                )
+        ]
     }
     
     private func setupLogoView() {
@@ -243,36 +336,10 @@ class HomescreenViewController: UIViewController {
             headerTitleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 30)
         ])
     }
-    
-    private func loadMockEvents() {
-        // Create mock events for testingd
-        events = [
-//            Event(id: 1, userId: "user1", title: "Event 1", imageUrl: "https://example.com/image1.jpg", description: "Description 1", location: "Location 1", capacity: 50, date: Date(), createdAt: Date()),
-//            Event(id: 2, userId: "user2", title: "Event 2", imageUrl: "https://example.com/image2.jpg", description: "Description 2", location: "Location 2", capacity: 100, date: Date(), createdAt: Date()),
-//            Event(id: 3, userId: "user3", title: "Event 3", imageUrl: "https://example.com/image3.jpg", description: "Description 3", location: "Location 3", capacity: 100, date: Date(), createdAt: Date())
-        ]
-        eventsCollectionView.reloadData()
-    }
-    
-    private func loadMockStories() {
-        stories = [
-            Story(id: 1, imageUrl: "https://example.com/story1.jpg", title: "emily122345", caption: "made this over the weekend and it was very good.", createdAt: Date()),
-            Story(id: 2, imageUrl: "https://example.com/story2.jpg", title: "johnDoe", caption: "Tried this recipe last night, amazing taste!", createdAt: Date()),
-            Story(id: 2, imageUrl: "https://example.com/story2.jpg", title: "johnDoe", caption: "Tried this recipe last night, amazing taste!", createdAt: Date())
-        ]
-        storiesCollectionView.reloadData()
-    }
-    
-    private func loadMockRecipes() {
-        recipes = [
-            Recipe(id: 1, userId: "chef1", title: "Recipe 1", imageUrl: "https://example.com/recipe1.jpg", time: "30 mins", servings: "2", ratings: "5", description: "Delicious recipe 1", ingredients: [], instructions: [], createdAt: Date()),
-            Recipe(id: 2, userId: "chef2", title: "Recipe 2", imageUrl: "https://example.com/recipe2.jpg", time: "45 mins", servings: "4", ratings: "4", description: "Tasty recipe 2", ingredients: [], instructions: [], createdAt: Date())
-        ]
-        recipesCollectionView.reloadData()
-    }
 }
 
 extension HomescreenViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == storiesCollectionView {
             return stories.count
@@ -308,5 +375,19 @@ extension HomescreenViewController: UICollectionViewDelegate, UICollectionViewDa
             return cell
         }
         return UICollectionViewCell()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == eventsCollectionView {
+            let selectedEvent = events[indexPath.item]
+            let eventVC = SocialEventViewController(event: selectedEvent)
+            navigationController?.pushViewController(eventVC, animated: true)
+        } else if collectionView == recipesCollectionView {
+            let selectedRecipe = recipes[indexPath.item]
+            let recipeVC = RecipeViewController()
+            
+            
+            navigationController?.pushViewController(recipeVC, animated: true)
+        }
     }
 }

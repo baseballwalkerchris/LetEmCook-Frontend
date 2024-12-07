@@ -33,11 +33,11 @@ class NetworkManager {
         let endpoint: String = "\(devEndpoint)/users/1/stories/"
         
         let parameters: Parameters = [
-            "user_id": "test",
-            "caption": "test",
-            "title": "testTitle",
-            "image_url": "test"
-/*            "created_at": "test",  */      ]
+            "user_id": userId,
+            "caption": caption,
+            "title": userId,
+            "image_url": imageUrl
+     ]
         
         
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
@@ -89,25 +89,15 @@ class NetworkManager {
         
     func createRecipe(
         userId: String, title: String, imageUrl: String, time: String, servings: String, ratings: String, description: String,
-        ingredients: [Ingredient], directions: [Direction], completion: @escaping (Recipe) -> Void) {
+        ingredients: [Ingredient], directions: [String], completion: @escaping (Recipe) -> Void) {
             
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
         
         let endpoint: String = "\(devEndpoint)/users/1/recipes/"
-            
-        let ingredientsJSON: String
-        let directionsJSON: String
-
-        do {
-            let encoder = JSONEncoder()
-            encoder.keyEncodingStrategy = .convertToSnakeCase
-            ingredientsJSON = String(data: try encoder.encode(ingredients), encoding: .utf8) ?? "[]"
-            directionsJSON = String(data: try encoder.encode(directions), encoding: .utf8) ?? "[]"
-        } catch {
-            print("Failed to encode ingredients or directions: \(error.localizedDescription)")
-            return
-        }
+        
+         
+                    
 
         
         let parameters: Parameters = [
@@ -118,21 +108,22 @@ class NetworkManager {
             "servings": servings,
             "ratings": ratings,
             "description": description,
-            "ingredients": ingredientsJSON,
-            "instructions": directionsJSON
+            "ingredients": ingredients,
+            "instructions": directions
         ]
-
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
-            .responseDecodable(of: Recipe.self, decoder: decoder) { response in
+            .responseDecodable(of: RecipeResponse.self, decoder: decoder) { response in
                 switch response.result {
                 case .success(let recipe):
-                    print("Successfully added recipe with ID: \(recipe.id)")
-                    completion(recipe)
+                    print("Successfully added recipe with ID: \(recipe.data.id)")
+                    completion(recipe.data)
                 case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
                     print("Error in NetworkManager.createRecipe: \(error.localizedDescription)")
-                    print("No response data")
                 }
             }
     }
@@ -164,6 +155,8 @@ class NetworkManager {
         userId: Int, title: String, imageUrl: String, description: String,
         location: String, capacity: Int, date: Date, completion: @escaping (Event) -> Void) {
             
+//        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+//        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
@@ -178,7 +171,6 @@ class NetworkManager {
             "caption": description,
             "location": location,
             "number_going": capacity
-//            "time": date
         ]
                     
 
@@ -194,7 +186,6 @@ class NetworkManager {
                         print("Raw Response: \(rawResponse)") // Log the raw JSON response
                     }
                     print("Error in NetworkManager.createEvent: \(error.localizedDescription)")
-                    print("No response data")
                 }
             }
     }

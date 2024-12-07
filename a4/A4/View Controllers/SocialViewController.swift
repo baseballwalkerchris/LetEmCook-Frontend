@@ -107,7 +107,9 @@ class SocialEventViewController: UIViewController {
         foodImage.sd_setImage(with: recipeImageUrl)
         eventName.text = event.title
         author.text = "By \(event.userId)"
-        dayText.text = "placeholder"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" 
+        dayText.text = dateFormatter.string(from: event.createdAt)
         locationText.text = event.location
         detailsText.text = event.caption
         super.init(nibName: nil, bundle: nil)
@@ -143,7 +145,7 @@ class SocialEventViewController: UIViewController {
              contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
              contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
              contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // Critical for vertical scrolling
+             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
          ])
     }
     
@@ -197,7 +199,7 @@ class SocialEventViewController: UIViewController {
     }
     
     private func setUpDayWord(){
-        dayWord.text = "Day:"
+        dayWord.text = "Date:"
         dayWord.textColor = UIColor.a4.black
         dayWord.font = .systemFont(ofSize: 24, weight: .bold).rounded
         contentView.addSubview(dayWord)

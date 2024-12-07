@@ -41,9 +41,7 @@ class RecipeViewCell: UICollectionViewCell {
     
     // MARK: - Configure cell function
     func configure(recipe: Recipe) {
-        if let recipeImageUrl = URL(string: recipe.imageUrl) {
-            foodImage.sd_setImage(with: recipeImageUrl)
-        }
+        foodImage.image = UIImage(named: recipe.imageUrl)
         titleLabel.text = recipe.title
         userLabel.text = "By \(recipe.userId)"
         timeLabel.text = "\(recipe.time)"
@@ -75,10 +73,12 @@ class RecipeViewCell: UICollectionViewCell {
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         titleLabel.textColor = UIColor.black
         contentView.addSubview(titleLabel)
+        titleLabel.numberOfLines = 2
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(foodImage.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().inset(10)
         }
     }
     

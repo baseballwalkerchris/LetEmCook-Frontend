@@ -24,7 +24,8 @@ class SignUpViewController: UIViewController {
     //MARK: View did load
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.a4.offWhite
+        let customLightBlue = UIColor(red: 120/255.0, green: 180/255.0, blue: 240/255.0, alpha: 1.0)
+        view.backgroundColor = customLightBlue
         setUpAppName()
         setUpAppLogo()
         setUpGetStarted()
@@ -32,6 +33,7 @@ class SignUpViewController: UIViewController {
         setUpPasswordTextField()
         setUpSignUpButton()
         setUpLoginButton()
+        
         
     }
     
@@ -84,11 +86,11 @@ class SignUpViewController: UIViewController {
     private func setUpUsernameTextField(){
         usernameTextField.placeholder = "Username"
         usernameTextField.layer.borderWidth = 1
-        usernameTextField.layer.borderColor = UIColor.a4.silver.cgColor
+        usernameTextField.layer.borderColor = UIColor.a4.white.cgColor
         usernameTextField.layer.cornerRadius = 20
         usernameTextField.font = .systemFont(ofSize: 16)
+        usernameTextField.textColor = .a4.white
         
-        //Subview
         view.addSubview(usernameTextField)
         let usernameTextFieldPadding = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 40)) // Adjust width for padding
         usernameTextField.leftView = usernameTextFieldPadding
@@ -104,11 +106,12 @@ class SignUpViewController: UIViewController {
     }
     
     private func setUpPasswordTextField(){
-        passwordTextField.placeholder = "Username"
+        passwordTextField.placeholder = "Password"
         passwordTextField.layer.borderWidth = 1
-        passwordTextField.layer.borderColor = UIColor.a4.silver.cgColor
+        passwordTextField.layer.borderColor = UIColor.a4.white.cgColor
         passwordTextField.layer.cornerRadius = 20
         passwordTextField.font = .systemFont(ofSize: 16)
+        passwordTextField.textColor = .a4.white
         
         //Subview
         view.addSubview(passwordTextField)

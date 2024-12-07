@@ -113,6 +113,7 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         
         setUpBookmarkedScrollView()
         setupSavedCollectionView()
+        setUpSignOutButton()
         
         tabBarChanged(tabBar)
  
@@ -417,6 +418,37 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         }
     }
     
+    private let signOutButton = UIButton(type: .system)
+
+    private func setUpSignOutButton() {
+        signOutButton.setTitle("Sign Out", for: .normal)
+        signOutButton.setTitleColor(.white, for: .normal)
+        signOutButton.backgroundColor = .red
+        signOutButton.layer.cornerRadius = 8
+        signOutButton.addTarget(self, action: #selector(signOutTapped), for: .touchUpInside)
+        
+        topProfileContainerView.addSubview(signOutButton)
+        
+        signOutButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalTo(profileImageView).offset(40)
+            make.width.equalTo(100)
+            make.height.equalTo(44)
+        }
+    }
+
+    @objc private func signOutTapped() {
+        // Reset user login state
+        UserDefaults.standard.set(false, forKey: "hasSignedIn")
+        
+        // Navigate to the SignInViewController
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            let signInVC = SignUpViewController()
+            let navController = UINavigationController(rootViewController: signInVC)
+            sceneDelegate.window?.rootViewController = navController
+        }
+    }
+    
 }
 extension ProfileViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
@@ -537,6 +569,8 @@ extension ProfileViewController {
             
         }
     }
+    
+    
 
    
 }
