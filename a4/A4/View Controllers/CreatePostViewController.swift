@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CreatePostViewController: UIViewController {
+class CreatePostViewController: UIViewController, UIPickerViewDelegate {
     
     // MARK: - Properties (view)
     let customHeaderView = CustomHeaderView()
@@ -1205,11 +1205,24 @@ class CreatePostViewController: UIViewController {
         }
         
     }
+    
+    // MARK: upload image to backend
+    
+    private func uploadImageToBackend(image: UIImage, completion: @escaping (String) -> Void) {
+        NetworkManager.shared.postImage(image: image) { imageUrl in
+            if let imageUrl = imageUrl {
+                print("Image uploaded successfully: \(imageUrl)")
+                completion(imageUrl)
+            } else {
+                print("Failed to upload image")
+            }
+        }
+    }
 }
 
 
 
-extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDataSource, UITextFieldDelegate {
+extension CreatePostViewController: UINavigationControllerDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
             return 1 // Single column in each picker
         }
@@ -1240,7 +1253,7 @@ extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigatio
 
 
 
-extension CreatePostViewController: UIPickerViewDelegate {
+extension CreatePostViewController: UIImagePickerControllerDelegate {
     private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
         guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
             print("Source type not available")
@@ -1256,19 +1269,35 @@ extension CreatePostViewController: UIPickerViewDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             switch segmentedControl.selectedSegmentIndex {
-            case 0:
+            case 0: // Story
                 storySelectedImageView.image = selectedImage
-            case 1:
+                uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
+                    guard let self = self else { return }
+                    self.storySelectedImageView.tag = 1 // Track the upload completion with a tag
+                    self.storySelectedImageView.accessibilityLabel = imageUrl // Store the URL in the label
+                    print(self.storySelectedImageView.accessibilityLabel)
+                }
+            case 1: // Recipe
                 recipeSelectedImageView.image = selectedImage
-            case 2:
+                uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
+                    guard let self = self else { return }
+                    self.recipeSelectedImageView.tag = 1 // Track the upload completion with a tag
+                    self.recipeSelectedImageView.accessibilityLabel = imageUrl
+                }
+            case 2: // Event
                 eventSelectedImageView.image = selectedImage
+                uploadImageToBackend(image: selectedImage) { [weak self] imageUrl in
+                    guard let self = self else { return }
+                    self.eventSelectedImageView.tag = 1 // Track the upload completion with a tag
+                    self.eventSelectedImageView.accessibilityLabel = imageUrl
+                }
             default:
                 break
             }
         }
         picker.dismiss(animated: true)
     }
-    
+
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
     }
@@ -1284,7 +1313,6 @@ extension CreatePostViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IngredientViewCell.reuse, for: indexPath) as? IngredientViewCell else { return UICollectionViewCell() }
         let ingredient = ingredients[indexPath.row]
-        // TODO: dummy data
         cell.configure(ingredient: ingredient)
         return cell
     }

@@ -7,6 +7,7 @@
 
 import Alamofire
 import Foundation
+import UIKit
 
 class NetworkManager {
     
@@ -247,4 +248,50 @@ class NetworkManager {
     }
 
     
+    func postImage(image: UIImage, completion: @escaping (String?) -> Void) {
+        // Convert the UIImage to Base64
+        print("hi")
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("Failed to convert UIImage to Data")
+            completion(nil)
+            return
+        }
+
+        let base64ImageString = "data:image/jpeg;base64,\(imageData.base64EncodedString())"
+        
+        print("Base64 Encoded String (First 100 Characters): \(base64ImageString.prefix(100))")
+        // Prepare the request
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+
+        let endpoint: String = "\(devEndpoint)/upload/"
+        
+        let parameters: Parameters = [
+            "image_data": base64ImageString
+        ]
+        
+        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate()
+            .responseDecodable(of: UploadImageResponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let uploadResponse):
+                    if uploadResponse.success {
+                        print("Image uploaded successfully. URL: \(uploadResponse.data.url)")
+                        completion(uploadResponse.data.url)
+                    } else {
+                        print("Failed to upload image: Success flag is false")
+                        completion(nil)
+                    }
+                case .failure(let error):
+                    if let data = response.data, let rawResponse = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawResponse)") // Log the raw JSON response
+                    }
+                    print("Error in postImage: \(error.localizedDescription)")
+                    completion(nil)
+                }
+            }
+    }
 }

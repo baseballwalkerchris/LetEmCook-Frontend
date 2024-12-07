@@ -7,6 +7,11 @@
 import UIKit
 import SnapKit
 
+protocol ItemCellDelegate: AnyObject {
+    func addButtonTapped()
+}
+
+
 class ItemCell: UICollectionViewCell {
     
     static let reuse = "ItemCell"
@@ -16,12 +21,11 @@ class ItemCell: UICollectionViewCell {
     private let removeButton = UIButton()
     private let addButton = UIButton()
     
+    weak var delegate: ItemCellDelegate?
+
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        
-        
-        
         setupImageView()
         setupNameLabel()
         setUpRemoveButton()
@@ -83,6 +87,7 @@ class ItemCell: UICollectionViewCell {
         addButton.clipsToBounds = true
         addButton.layer.cornerRadius = 8
         addButton.setImage(UIImage(named: "addIngredientButton"), for: .normal)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         contentView.addSubview(addButton)
         addButton.snp.makeConstraints { make in
@@ -90,4 +95,9 @@ class ItemCell: UICollectionViewCell {
             make.height.equalTo(80)
         }
     }
+    
+    @objc private func addButtonTapped() {
+        delegate?.addButtonTapped() // Notify delegate when button is tapped
+    }
 }
+
