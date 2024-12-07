@@ -43,27 +43,28 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     
     //MARK: Propertires: data
     private let dairyItems = ["Yogurt", "Cheese", "Oat Milk"]
-    private let vegetableItems = ["Cucumber", "Celery", "Onion", "Garlic", "Potatoes", "Spinach", "Pepper"]
+    private let vegetableItems = ["Cucumber", "Celery", "Onion", "Garlic", "Potatoes", "Cucumber", "Peppers"]
     private let meatItems = ["Chicken", "Beef", "Pork"]
     
-    private let dairyImages = ["yogurt", "yogurt", "yogurt"]
-    private let vegetableImages = ["cucumber","cucumber","cucumber","cucumber","cucumber","cucumber","cucumber"]
-    private let meatImages = ["meat", "meat", "meat"]
+    private let dairyImages = ["yogurt", "cheese4", "oatmilk"]
+    private let vegetableImages = ["cucumber","celery","onion2","garlic","potatoes2","cucumber","peppers"]
+    private let meatImages = ["meat", "beef2", "pork2"]
     
     //MARK: refreshcontrol/ingredients
     private let refreshControl = UIRefreshControl()
-    private var ingredients: [Ingredient] = [
-        ]
+    private let events = [
+                ("Taco Tuesday", "5:30 PM 12/23/25", "Eddy Gate Apartments"),
+                ("Popcorn Movie", "6:00 PM 12/24/25", "Downtown Cinema"),
+                ("Pizza Party", "7:00 PM 12/25/25", "Central Park")
+            ]
     
-    private var events: [Event] = [
-        
-    ]
+    
     
     
     //MARK: views/Data for saved
     private var savedCollectionView: UICollectionView!
     private let savedItems = ["Post", "Recipe", "Event"]
-    private let savedItemImages = ["post_icon", "recipe_icon", "event_icon"]
+    private let savedItemImages = ["taco", "burger", "icecream"]
     
     //MARK: Views/data for events
     private var eventsCollectionView: UICollectionView!
@@ -103,7 +104,8 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.a4.offWhite
-
+        
+        
         setupCustomHeaderView()
         setupTopProfileContainer()
         setupTabBar()
@@ -118,14 +120,18 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         setupMeatSection()
         
         setUpMyPostsScrollView()
+        
         setUpEventsScrollView()
         setupEventsCollectionView()
         
-        setUpBookmarkedScrollView()
+        setUpSavedScrollView()
         setupSavedCollectionView()
         setUpSignOutButton()
         
+        
         tabBarChanged(tabBar)
+//        fetchAllIngredients()
+//        fetchEvents()
  
     }
     
@@ -162,9 +168,16 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
     
     @objc private func tabBarChanged(_ sender: UISegmentedControl) {
         fridgeScrollView.isHidden = sender.selectedSegmentIndex != 0
+       
+     
         myPostsScrollView.isHidden = sender.selectedSegmentIndex != 1
         savedScrollView.isHidden = sender.selectedSegmentIndex != 2
+       
+      
+        
         eventsScrollView.isHidden = sender.selectedSegmentIndex != 3
+       
+        
     }
     
     private func setupTopProfileContainer() {
@@ -217,7 +230,7 @@ class ProfileViewController: UIViewController, ItemCellDelegate {
         }
     }
     
-    private func setUpBookmarkedScrollView(){
+    private func setUpSavedScrollView(){
         savedScrollView.alwaysBounceVertical = true
         savedScrollView.isScrollEnabled = true
         savedScrollView.showsVerticalScrollIndicator = true
@@ -495,56 +508,50 @@ extension ProfileViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             cell.delegate = self
             if indexPath.item == 0 {
-                    cell.configureAddButton()
-                } else {
-                    if ingredients.count > 0 {
-                        cell.configure(ingredient: ingredients[indexPath.item])
-                    }
-                   
-                }
+                cell.configureAddButton()
+            } else {
+                cell.configure(with: dairyItems[indexPath.item], with: dairyImages[indexPath.item])
+            }
             return cell
         } else if collectionView == vegetableCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             cell.delegate = self
             if indexPath.item == 0 {
-                    cell.configureAddButton()
-                } else {
-                    if ingredients.count > 0 {
-                        cell.configure(ingredient: ingredients[indexPath.item])
-                    }
-                    
+                cell.configureAddButton()
+            } else {
+                cell.configure(with: vegetableItems[indexPath.item], with: vegetableImages[indexPath.item])
             }
             return cell
         } else if collectionView == meatCollectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCell.reuse, for: indexPath) as! ItemCell
             cell.delegate = self
             if indexPath.item == 0 {
-                    cell.configureAddButton()
-                } else {
-                    if ingredients.count > 0 {
-                        cell.configure(ingredient: ingredients[indexPath.item])
-                    }
-                    
-                }
+                cell.configureAddButton()
+            } else {
+                cell.configure(with: meatItems[indexPath.item], with: meatImages[indexPath.item])
+            }
             return cell
         } else if collectionView == savedCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SavedItemCell.reuse, for: indexPath) as! SavedItemCell
             let item = savedItems[indexPath.item]
-
-            cell.configure(with: item, imagename: "icecream")
-
-        
+            let itemImage = savedItemImages[indexPath.item]
+            
+            cell.configure(with: item, imagename: itemImage)
+            
+            
             return cell
         } else  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EventItemCell.reuse, for: indexPath) as! EventItemCell
             let event = events[indexPath.item]
-            cell.configure(event: event)
+            cell.configure(with: event)
             return cell
         }
-  
     }
-    
 }
+  
+    
+    
+
 
 extension ProfileViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -607,33 +614,46 @@ extension ProfileViewController {
 }
 
 //MARK: extension network manager
-extension ProfileViewController {
-    @objc private func fetchAllIngredients() {
-        NetworkManager.shared.fetchIngredients{ [weak self] ingredients in
-            guard let self = self else { return }
-            self.ingredients = ingredients
-            //below some stuff for sorting by new/top posts
-            DispatchQueue.main.async {
-                self.meatCollectionView.reloadData()
-                self.dairyCollectionView.reloadData()
-                self.vegetableCollectionView.reloadData()
-                //below tells when to stop spinning
-                self.refreshControl.endRefreshing() // End refresh control
-            }
-        }
-    }
-    
-    @objc private func fetchEvents() {
-        NetworkManager.shared.fetchEvents { [weak self] events in
-            guard let self = self else { return }
-            self.events = events
-            //below some stuff for sorting by new/top posts
-            DispatchQueue.main.async {
-                self.eventsCollectionView.reloadData()
-                //below tells when to stop spinning
-                self.refreshControl.endRefreshing() // End refresh control
-            }
-        }
-    }
-
-}
+//extension ProfileViewController {
+//    @objc private func fetchAllIngredients() {
+//        NetworkManager.shared.fetchIngredients{ [weak self] ingredients in
+//            guard let self = self else { return }
+//            self.ingredients = ingredients
+//            DispatchQueue.main.async {
+//                self.meatCollectionView.reloadData()
+//                self.dairyCollectionView.reloadData()
+//                self.vegetableCollectionView.reloadData()
+//                self.eventsCollectionView.reloadData()
+//                self.savedCollectionView.reloadData()
+//                //below tells when to stop spinning
+//                self.refreshControl.endRefreshing() // End refresh control
+//                print(self.ingredients)
+//            }
+//        }
+//        print(self.ingredients)
+//    }
+//    
+//    
+//    @objc private func fetchEvents() {
+//        print("fetching")
+//        NetworkManager.shared.fetchEvents { [weak self] events in
+//            guard let self = self else { return }
+//            self.events = events
+//    
+//            DispatchQueue.main.async {
+//                self.meatCollectionView.reloadData()
+//                self.dairyCollectionView.reloadData()
+//                self.vegetableCollectionView.reloadData()
+//                self.eventsCollectionView.reloadData()
+//                self.savedCollectionView.reloadData()
+//                //below tells when to stop spinning
+//                self.refreshControl.endRefreshing() // End refresh control
+//                //print(self.events)
+//            }
+//        }
+//        print(events)
+//    }
+//    
+//  
+//
+//}

@@ -47,8 +47,8 @@ class ItemCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         
         imageView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(80)
+            make.top.leading.trailing.equalToSuperview().inset(5)
+            make.height.equalTo(60)
         }
     }
     
@@ -75,13 +75,9 @@ class ItemCell: UICollectionViewCell {
         }
     }
     
-    func configure(ingredient: Ingredient) {
-        nameLabel.text = ingredient.name
-        if let url = URL(string: ingredient.imageUrl) {
-            imageView.sd_setImage(with: url)
-        } else {
-            imageView.image = UIImage(named: "placeholder") // Fallback to a default image if URL is invalid
-        }
+    func configure(with itemName: String, with imageName: String) {
+            nameLabel.text = itemName
+            imageView.image = UIImage(named: imageName) // Replace with actual image
     }
     
     func configureAddButton() {

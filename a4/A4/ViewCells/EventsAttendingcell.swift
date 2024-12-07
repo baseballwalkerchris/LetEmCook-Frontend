@@ -96,23 +96,9 @@ class EventItemCell: UICollectionViewCell {
         }
     }
 
-    func configure(event: Event) {
-//        let id: Int
-//        let userId: Int
-//        let title: String
-//        let imageUrl: String
-//        let caption: String
-//        let location: String
-//        let numberGoing: Int
-//        let createdAt: Date
-        titleLabel.text = event.title
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, yyyy h:mm a" // Example: Dec 12, 2024 5:30 PM
-//        timeLabel.text = dateFormatter.string(from: event.date)
-        timeLabel.text = "placeholder date"
-        locationLabel.text = event.location
-        peopleGoing.text = "\(event.numberGoing) + going"
-        let eventImageurl = URL(string: event.imageUrl)
-        eventImage.sd_setImage(with: eventImageurl)
-    }
+    func configure(with event: (title: String, time: String, location: String)) {
+           titleLabel.text = event.title
+           timeLabel.text = event.time
+           locationLabel.text = event.location
+       }
 }
