@@ -1,6 +1,6 @@
 # LetEmCook!
 
-Our app is a cooking social media app that brings college students together through food, where users can share stories, recipes, and events. 
+Our app is a cooking social media app where users can share stories, recipes, and events, with the purpose of bringing college students together through food.
 
 Link to our backend repository: https://github.com/Jcheng777/FA24HackChallenge-Backend
 
@@ -28,5 +28,8 @@ Link to our backend repository: https://github.com/Jcheng777/FA24HackChallenge-B
 
 
 
+Our app is meant to connect people through food, by users creating and sharing three different types of posts: stories, recipes, and events. Stories consist of a photo of food and a short description of it. Recipes include important information like ingredients, directions, and other important information like number of servings, a duration, and a difficulty rating. Finally, events are meant to be social gatherings where people can cook together and share food. In their profile pages, users can also see their fridge, which is a list of ingredients in different categories like dairy, meat, and vegetables. They can specify ingredients from their fridge to include in their recipes. Some features that we implemented on the backend but didn't get to implement on the frontend include creating AI-generated recipes from the ingredients in a user's fridge, and user authentication. We hope you enjoy!
+
+We have multiple screens that you can navigate between, as well multiple scrollable views for the home page. We use networking to make POST requests for creating the different types of posts, as well as to make GET requests to display the posts. We have more than 4 routes in our backend, more than 2 tables, and we have submitted an API specification explaining each route. 
 
 
